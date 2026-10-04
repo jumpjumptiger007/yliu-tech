@@ -209,9 +209,8 @@
 .row-title { min-width: 0; font: 700 19px/1.15 var(--display); letter-spacing: -.02em; }
 .row-type, .row-status, .row-year { color: var(--text-muted); font: 400 10px/1 var(--mono); letter-spacing: .08em; }
 .row-status { text-transform: uppercase; }
-.status-live .row-status, .status-active .row-status { color: var(--green); }
+.status-live .row-status, .status-active .row-status, .status-archived .row-status { color: var(--green); }
 .row-arrow { justify-self: end; color: var(--green); font: 600 20px/1 var(--mono); transition: transform 180ms ease; }
-.project-row.status-archived .row-number, .project-row.status-archived .row-status { color: var(--text-muted); }
 @media (hover:hover) and (pointer:fine) {
   .project-row:hover, .project-row:focus-visible { background: rgba(166,255,26,.035); transform: translateX(6px); }
   .project-row:hover .row-arrow, .project-row:focus-visible .row-arrow { transform: translateX(4px); }
