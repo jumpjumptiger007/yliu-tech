@@ -84,6 +84,34 @@
 .system-values li { color: var(--text-secondary); font: 500 10px/1.5 var(--mono); overflow-wrap: anywhere; }
 .system-section-readable-rows .system-values li { font-size: 12px; line-height: 1.55; }
 
+/* Optional article grammar: engineering choices and factual checkpoints. */
+.decision-section, .verification-section { background: var(--field-dense); }
+.decision-relationship { display: grid; grid-template-columns: minmax(0,1fr) 64px minmax(0,1fr); align-items: center; max-width: 1100px; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+.decision-path { min-width: 0; padding: 24px 0; }
+.decision-path h3 { margin: 0 0 13px; color: var(--text-muted); font: 500 9px/1.5 var(--mono); letter-spacing: .12em; }
+.decision-chosen h3 { color: var(--green); }
+.decision-path p { margin: 0; color: var(--text); font: 600 clamp(24px, 2.8vw, 36px)/1.15 var(--display); letter-spacing: -.025em; overflow-wrap: anywhere; }
+.decision-avoided p { color: var(--text-secondary); font-weight: 500; }
+.decision-connector { justify-self: center; color: var(--green); font: 500 24px/1 var(--mono); }
+.decision-reason { max-width: 760px; margin-top: 24px; overflow-wrap: anywhere; }
+.decision-constraint { max-width: 760px; margin: 18px 0 0; padding-left: 16px; border-left: 1px solid var(--line-strong); color: var(--text-muted); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.verification-checkpoint { max-width: 1100px; padding-top: 18px; border-top: 1px solid var(--line-strong); }
+.verification-marker { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; color: var(--text-muted); font: 500 9px/1.5 var(--mono); letter-spacing: .1em; }
+.verification-marker span { color: var(--green); font-size: 8px; }
+.verification-readouts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); margin: 0; }
+.verification-readouts > div { min-width: 0; padding: 20px 24px 20px 0; border-bottom: 1px solid var(--line); }
+.verification-readouts dt { color: var(--text-muted); font: 500 10px/1.5 var(--mono); letter-spacing: .05em; text-transform: uppercase; overflow-wrap: anywhere; }
+.verification-readouts dd { margin: 9px 0 0; color: var(--text); font: 500 18px/1.45 var(--mono); overflow-wrap: anywhere; }
+.verification-caption { max-width: 760px; margin: 17px 0 0; color: var(--text-muted); font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .decision-relationship { grid-template-columns: minmax(0,1fr); }
+  .decision-path { padding: 20px 0; }
+  .decision-connector { font-size: 0; }
+  .decision-connector::after { content: "↓"; font-size: 18px; }
+  .verification-readouts { grid-template-columns: minmax(0,1fr); }
+  .verification-readouts > div { padding-right: 0; }
+}
+
 @media (max-width: 900px) {
   .project-hero { min-height: 0; }
   .project-hero-grid { grid-template-columns: minmax(0,1fr); gap: 26px; }

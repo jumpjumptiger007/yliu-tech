@@ -1,0 +1,407 @@
+<!doctype html>
+<!-- Non-production standalone reference. Inline snapshots of production styles and shared-renderer markup; no canonical project migration. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Project Modules V2 — Non-production Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wdth,wght@75..100,400..700&display=swap" rel="stylesheet">
+<style>:root {
+  color-scheme: dark;
+  --bg: #050706;
+  --field: #070a08;
+  --field-dense: #090d0a;
+  --panel: #0b100d;
+  --panel-raised: #0d120f;
+  --text: #edf1ec;
+  --text-secondary: #b5beb7;
+  --text-muted: #758077;
+  --line: #203126;
+  --line-strong: #2d4632;
+  --line-hover: #456440;
+  --green: #a6ff1a;
+  --green-ink: #071005;
+  --ghost: #122117;
+  --display: "Bricolage Grotesque", sans-serif;
+  --sans: "Instrument Sans", sans-serif;
+  --mono: "IBM Plex Mono", monospace;
+  --editorial-width: 1560px;
+  --page-edge: max(clamp(20px, 3.35vw, 48px), calc((100% - var(--editorial-width)) / 2));
+  --hero-edge: max(clamp(24px, 4.6vw, 72px), calc((100% - var(--editorial-width)) / 2));
+  --chapter-rule: rgba(32,49,38,.88);
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; scroll-behavior: smooth; background: var(--bg); }
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: clip;
+  background:
+    radial-gradient(72% 30% at 83% 5%, rgba(92,128,88,.026), transparent 64%),
+    radial-gradient(60% 24% at 12% 42%, rgba(166,255,26,.012), transparent 68%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a, button { touch-action: manipulation; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+
+.skip-link {
+  position: fixed;
+  z-index: 120;
+  top: -4rem;
+  left: 1rem;
+  padding: .7rem 1rem;
+  background: var(--green);
+  color: var(--green-ink);
+  font: 500 .7rem/1 var(--mono);
+}
+.skip-link:focus { top: 1rem; }
+
+site-chrome { display: contents; }
+.brand-anchor {
+  position: fixed;
+  z-index: 90;
+  top: 15px;
+  left: 18px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(72,82,75,.08);
+  border-radius: 50%;
+  background: rgba(72,82,75,.11);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.brand-anchor img { display: block; width: 31px; height: auto; }
+.site-header {
+  position: fixed;
+  z-index: 80;
+  top: 14px;
+  right: 0;
+  left: 0;
+  pointer-events: none;
+}
+.nav-wrap { position: relative; width: min(92vw, 455px); margin: 0 auto; pointer-events: auto; }
+.nav {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 58px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 14px;
+  border: 1px solid rgba(72,82,75,.11);
+  border-radius: 18px;
+  background: rgba(72,82,75,.16);
+  -webkit-backdrop-filter: blur(28px) saturate(152%);
+  backdrop-filter: blur(28px) saturate(152%);
+}
+.nav a {
+  display: grid;
+  min-width: 0;
+  min-height: 44px;
+  flex: 1;
+  place-items: center;
+  padding: 12px 8px;
+  color: #e8ede9;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: .12em;
+  text-align: center;
+}
+.nav a[aria-current] { color: #f5f7f5; }
+.nav a:hover, .nav a:focus-visible { color: var(--green); }
+.progress-outline {
+  position: absolute;
+  inset: -1px -1px -4px;
+  width: calc(100% + 2px);
+  height: 63px;
+  overflow: visible;
+  pointer-events: none;
+}
+.progress-outline path {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 2.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 5px rgba(166,255,26,.25));
+}
+.progress-outline .active { stroke-dasharray: 100 100; stroke-dashoffset: 100; opacity: 0; }
+
+site-contact { display: block; }
+.contact {
+  position: relative;
+  min-height: 330px;
+  padding: 66px var(--page-edge) 32px;
+  background:
+    radial-gradient(58% 68% at 74% 22%, rgba(166,255,26,.016), transparent 68%),
+    var(--bg);
+  border-top: 1px solid var(--chapter-rule);
+}
+.contact-head { display: flex; align-items: center; gap: 18px; }
+.contact-head .section-tag::after { display: none; }
+.contact-head > i { height: 1px; flex: 1; background: var(--line); }
+.section-tag, .chapter-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: var(--text);
+  font: 500 10px/1.4 var(--mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.section-tag::after { height: 1px; flex: 1; margin-left: 10px; background: var(--line); content: ""; }
+.section-tag span, .chapter-label b { color: var(--green); font-weight: 500; }
+.contact-copy-group { max-width: 780px; }
+.contact h1 {
+  margin: 46px 0 0;
+  font: 700 clamp(78px, 7vw, 96px)/.9 var(--display);
+  font-variation-settings: "wdth" 94, "opsz" 48;
+  letter-spacing: -.065em;
+}
+.contact h1 a { color: var(--green); }
+.contact-copy {
+  max-width: 650px;
+  margin: 24px 0 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+.signal-link {
+  position: absolute;
+  top: 108px;
+  right: max(74px, var(--page-edge));
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 21px 33px;
+  border-radius: 12px;
+  background: var(--green);
+  color: var(--green-ink);
+  font: 600 13px/1 var(--mono);
+  letter-spacing: .11em;
+  transition: transform 180ms cubic-bezier(.22,1,.36,1), box-shadow 180ms ease;
+}
+.signal-link b { font-size: 1.25rem; font-weight: 500; }
+.signal-link:hover { transform: translateY(-3px); box-shadow: 0 10px 34px rgba(166,255,26,.12); }
+.contact-footer {
+  position: absolute;
+  top: 196px;
+  right: max(74px, var(--page-edge));
+  display: grid;
+  gap: 8px;
+  color: var(--text-secondary);
+  font: 500 10px/1 var(--mono);
+  letter-spacing: .11em;
+}
+.contact-footer a:hover { color: var(--green); }
+.contact-footer p { position: absolute; top: 58px; right: 0; width: max-content; margin: 0; color: var(--text-muted); font-size: 9px; white-space: nowrap; }
+
+[data-reveal] { opacity: 1; transform: none; }
+body.motion-ready [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity 520ms cubic-bezier(.22,1,.36,1), transform 520ms cubic-bezier(.22,1,.36,1); }
+body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: none; }
+
+@media (max-width: 760px) {
+  .brand-anchor { top: 12px; left: 12px; width: 40px; height: 40px; }
+  .brand-anchor img { width: 28px; }
+  .nav-wrap { width: calc(100% - 108px); min-width: 205px; max-width: 455px; }
+  .nav { height: 54px; gap: 4px; padding: 0 8px; border-radius: 16px; }
+  .nav a { padding: 10px 6px; font-size: 10px; }
+  .progress-outline { height: 59px; bottom: -4px; }
+  .contact { min-height: 0; padding: 54px var(--page-edge) 28px; }
+  .contact h1 { margin-top: 38px; font-size: 64px; }
+  .contact-copy { max-width: 300px; font-size: 15px; }
+  .signal-link { position: static; display: inline-flex; margin-top: 28px; padding: 15px 19px; border-radius: 10px; font-size: 10px; }
+  .contact-footer { position: static; display: flex; flex-wrap: wrap; align-items: center; gap: 13px; margin-top: 32px; font-size: 9px; }
+  .contact-footer p { position: static; flex-basis: 100%; width: auto; margin-top: 6px; white-space: normal; }
+}
+@media (max-width: 380px) {
+  .nav-wrap { width: calc(100% - 108px); min-width: 205px; }
+  .nav { gap: 0; padding: 0 5px; }
+  .nav a { padding-right: 3px; padding-left: 3px; font-size: 9px; letter-spacing: .08em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .progress-outline path, .signal-link, body.motion-ready [data-reveal] { transition: none !important; }
+  body.motion-ready [data-reveal] { opacity: 1; transform: none; }
+}
+
+.project-detail-page main { overflow: clip; }
+.project-detail-page article { width: 100%; }
+.project-hero {
+  position: relative;
+  display: grid;
+  min-height: 720px;
+  align-items: end;
+  padding: 136px var(--page-edge) 74px;
+  background:
+    radial-gradient(44% 58% at 78% 22%, rgba(92,128,88,.042), transparent 62%),
+    radial-gradient(34% 40% at 16% 82%, rgba(166,255,26,.016), transparent 68%),
+    var(--bg);
+}
+.project-hero-grid { position: relative; display: grid; width: 100%; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .7fr); gap: 56px; align-items: end; }
+.project-lead { min-width: 0; }
+.project-lead > .chapter-label { margin-bottom: 25px; color: var(--text-muted); }
+.project-lead > .chapter-label b { color: var(--green); font-weight: 500; }
+.project-hero h1 { max-width: 900px; margin: 0; font: 720 clamp(64px, 7.6vw, 118px)/.92 var(--display); font-variation-settings: "wdth" 96, "opsz" 64; letter-spacing: -.045em; overflow-wrap: normal; word-break: normal; }
+.project-hero h1 span { display: block; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 28px; }
+.hero-meta span { display: flex; flex-wrap: wrap; gap: 8px; color: var(--text-secondary); font: 500 9px/1.5 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.hero-meta b { color: var(--text-muted); font-weight: 500; }
+.hero-meta i { color: var(--text); font-style: normal; }
+.hero-meta .status-live, .hero-meta .status-active { color: var(--green); }
+.project-intro { max-width: 475px; padding-bottom: 5px; }
+.hero-summary { margin: 0; color: var(--text-secondary); font-size: clamp(18px, 1.65vw, 22px); line-height: 1.48; }
+.project-actions { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 30px; }
+.project-action { display: inline-flex; min-height: 44px; align-items: center; gap: 13px; color: var(--green); font: 600 9px/1 var(--mono); letter-spacing: .13em; }
+.project-action span:last-child { font-size: 16px; transition: transform 160ms ease; }
+.project-action:hover span:last-child { transform: translate(3px,-2px); }
+
+.article-section { padding: 58px var(--page-edge) 66px; border-bottom: 1px solid rgba(219,231,221,.09); }
+.article-section:nth-child(even) { background: rgba(255,255,255,.008); }
+.section-head { margin-bottom: 28px; }
+.section-head .chapter-label { margin-bottom: 14px; color: var(--text-muted); }
+.section-head h2 { max-width: 920px; margin: 0; font: 650 clamp(34px, 4vw, 52px)/1 var(--display); font-variation-settings: "wdth" 94, "opsz" 48; letter-spacing: -.045em; }
+.copy-stack { max-width: 760px; }
+.project-copy { margin: 0; color: var(--text-secondary); font-size: 17px; line-height: 1.72; }
+.project-copy + .project-copy { margin-top: 18px; }
+.project-copy code { color: var(--text); font: 500 .85em/1.4 var(--mono); }
+
+.signal-section { padding-top: 50px; padding-bottom: 54px; background: var(--field-dense); }
+.signal-section .section-head { margin-bottom: 23px; }
+.signal-sequence { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.signal-sequence li { display: grid; grid-template-columns: 28px minmax(0,1fr); gap: 10px; align-items: start; padding-top: 12px; border-top: 1px solid var(--line-strong); }
+.signal-sequence li span { color: var(--green); font: 500 8px/1.5 var(--mono); }
+.signal-sequence li strong { color: var(--text-secondary); font: 500 11px/1.5 var(--mono); overflow-wrap: anywhere; }
+
+.workflow-section, .output-section, .system-section { background: #060906; }
+.workflow-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.workflow-list li { min-width: 0; padding: 18px; border: 1px solid var(--line-strong); border-radius: 16px; background: var(--panel); }
+.flow-index { color: var(--green); font: 500 9px/1.4 var(--mono); }
+.workflow-list h3 { margin: 22px 0 9px; color: var(--text); font: 620 22px/1.05 var(--display); letter-spacing: -.035em; }
+.workflow-list li p { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.55; }
+.output-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 225px), 1fr)); gap: 10px; }
+.output-grid > div { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.output-grid > div > span { color: var(--text); font: 500 9px/1.4 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+.output-grid p { margin: 8px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+.output-caption, .system-caption { max-width: 760px; margin: 17px 0 0; color: var(--text-muted); font-size: 12px; line-height: 1.55; }
+.project-image { margin: 0; border: 1px solid var(--line-strong); background: var(--field-dense); }
+.project-image img { display: block; width: 100%; height: auto; }
+.project-image figcaption { padding: 13px 16px; border-top: 1px solid var(--line); color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+.report-table-scroll { max-width: 1100px; overflow-x: auto; border-top: 1px solid var(--line-strong); background: var(--field-dense); }
+.report-table-scroll:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
+.report-table { width: 100%; min-width: 480px; border-collapse: collapse; text-align: left; }
+.report-table th, .report-table td { padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.report-table th { color: var(--text-muted); font: 500 10px/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.report-table td { color: var(--text); font-size: 13px; line-height: 1.5; }
+.report-table-emphasis { color: var(--green); font-weight: 600; }
+.report-table-note, .report-table-caption { max-width: 760px; color: var(--text-muted); font-size: 12px; line-height: 1.55; }
+.report-table-note { margin: 0 0 17px; }
+.report-table-caption { margin: 17px 0 0; }
+.interactive-frame { margin: 0; border: 1px solid var(--line-strong); background: var(--field-dense); }
+.interactive-frame iframe { display: block; width: 100%; height: clamp(680px, 76vw, 860px); border: 0; background: var(--field-dense); }
+.interactive-caption { margin: 0; padding: 13px 16px; border-top: 1px solid var(--line); color: var(--text-muted); font: 500 9px/1.5 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+
+.topology { display: grid; gap: 16px; }
+.topology-row { display: flex; align-items: stretch; gap: 10px; }
+.topology-stage { display: flex; min-width: 0; min-height: 75px; flex: 1; align-items: center; padding: 14px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--panel); }
+.topology-stage strong { color: var(--text); font: 500 10px/1.5 var(--mono); letter-spacing: .03em; overflow-wrap: anywhere; }
+.topology-connector { display: grid; flex: 0 0 auto; place-items: center; color: var(--green); font: 500 14px/1 var(--mono); }
+.system-groups { display: grid; gap: 8px; max-width: 1100px; }
+.system-values { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0; padding: 12px 0; border-bottom: 1px solid var(--line); list-style: none; }
+.system-values li { color: var(--text-secondary); font: 500 10px/1.5 var(--mono); overflow-wrap: anywhere; }
+.system-section-readable-rows .system-values li { font-size: 12px; line-height: 1.55; }
+
+/* Optional article grammar: engineering choices and factual checkpoints. */
+.decision-section, .verification-section { background: var(--field-dense); }
+.decision-relationship { display: grid; grid-template-columns: minmax(0,1fr) 64px minmax(0,1fr); align-items: center; max-width: 1100px; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+.decision-path { min-width: 0; padding: 24px 0; }
+.decision-path h3 { margin: 0 0 13px; color: var(--text-muted); font: 500 9px/1.5 var(--mono); letter-spacing: .12em; }
+.decision-chosen h3 { color: var(--green); }
+.decision-path p { margin: 0; color: var(--text); font: 600 clamp(24px, 2.8vw, 36px)/1.15 var(--display); letter-spacing: -.025em; overflow-wrap: anywhere; }
+.decision-avoided p { color: var(--text-secondary); font-weight: 500; }
+.decision-connector { justify-self: center; color: var(--green); font: 500 24px/1 var(--mono); }
+.decision-reason { max-width: 760px; margin-top: 24px; overflow-wrap: anywhere; }
+.decision-constraint { max-width: 760px; margin: 18px 0 0; padding-left: 16px; border-left: 1px solid var(--line-strong); color: var(--text-muted); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.verification-checkpoint { max-width: 1100px; padding-top: 18px; border-top: 1px solid var(--line-strong); }
+.verification-marker { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; color: var(--text-muted); font: 500 9px/1.5 var(--mono); letter-spacing: .1em; }
+.verification-marker span { color: var(--green); font-size: 8px; }
+.verification-readouts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); margin: 0; }
+.verification-readouts > div { min-width: 0; padding: 20px 24px 20px 0; border-bottom: 1px solid var(--line); }
+.verification-readouts dt { color: var(--text-muted); font: 500 10px/1.5 var(--mono); letter-spacing: .05em; text-transform: uppercase; overflow-wrap: anywhere; }
+.verification-readouts dd { margin: 9px 0 0; color: var(--text); font: 500 18px/1.45 var(--mono); overflow-wrap: anywhere; }
+.verification-caption { max-width: 760px; margin: 17px 0 0; color: var(--text-muted); font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .decision-relationship { grid-template-columns: minmax(0,1fr); }
+  .decision-path { padding: 20px 0; }
+  .decision-connector { font-size: 0; }
+  .decision-connector::after { content: "↓"; font-size: 18px; }
+  .verification-readouts { grid-template-columns: minmax(0,1fr); }
+  .verification-readouts > div { padding-right: 0; }
+}
+
+@media (max-width: 900px) {
+  .project-hero { min-height: 0; }
+  .project-hero-grid { grid-template-columns: minmax(0,1fr); gap: 26px; }
+  .project-hero h1 { font-size: clamp(58px, 8.5vw, 90px); }
+}
+@media (max-width: 1000px) and (min-width: 761px) {
+  .interactive-frame iframe[src*="bulk-email-sender"] { height: 840px; }
+}
+@media (max-width: 760px) {
+  .project-hero { padding-top: 112px; padding-bottom: 54px; }
+  .section-head h2 { line-height: 1.08; letter-spacing: -.035em; }
+  .interactive-frame iframe[src*="bulk-email-sender"] { height: 1440px; }
+}
+@media (max-width: 680px) {
+  .project-hero-grid { grid-template-columns: minmax(0,1fr); gap: 28px; }
+  .project-lead > .chapter-label { margin-bottom: 20px; }
+  .project-hero h1 { font-size: clamp(38px, 12.4vw, 64px); line-height: .94; }
+  .hero-meta { gap: 10px 22px; margin-top: 21px; }
+  .project-intro { max-width: 420px; }
+  .hero-summary { font-size: 18px; }
+  .project-actions { margin-top: 20px; }
+  .article-section { padding: 44px var(--page-edge) 50px; }
+  .section-head { margin-bottom: 23px; }
+  .project-copy { font-size: 16px; line-height: 1.65; }
+  .signal-sequence { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .workflow-list, .output-grid { grid-template-columns: minmax(0,1fr); }
+  .workflow-list h3 { margin-top: 14px; }
+  .topology-row { flex-direction: column; gap: 7px; }
+  .topology-stage { min-height: 58px; }
+  .topology-connector { display: none; }
+  .interactive-frame iframe { height: 760px; }
+  .interactive-frame iframe[src*="bulk-email-sender"] { height: 1440px; }
+  .interactive-frame iframe[src*="qpsk-visualization"] { height: 1080px; }
+  .interactive-frame iframe[src*="password-generator"] { height: 1260px; }
+}
+@media (max-width: 680px) {
+  .interactive-frame iframe[src*="bulk-email-sender"] { height: 1600px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-action span:last-child { transition: none; }
+}
+</style></head><body class="project-detail-page"><a class="skip-link" href="#main">Skip to reference article</a><main id="main"><article>
+      <header class="project-hero">
+        <div class="project-hero-grid">
+          <div class="project-lead">
+            <p class="chapter-label"><b>PROJECT / 00</b> FEATURE ARTICLE</p>
+            <h1 id="project-title">Project Article Grammar V2</h1>
+            <div class="hero-meta"><span><b>TYPE</b> Non-production reference</span><span><b>STATUS</b> <i class="status-prototype">prototype</i></span></div>
+          </div>
+          <div class="project-intro"><p class="hero-summary">Approved integrated direction: engineering choices and factual checkpoints within the existing Project Detail article. All examples are illustrative.</p></div>
+        </div>
+      </header>
+<section class="article-section detail-section overview-section" aria-labelledby="detail-module-reference-0"><div class="section-head"><div><p class="chapter-label"><b>01</b> Overview</p><h2 id="detail-module-reference-0">A reviewable application workflow</h2></div></div><div class="copy-stack"><p class="project-copy">This non-production reference places the optional grammar inside a representative technical-magazine article. All product details and verification values on this page are illustrative.</p><p class="project-copy">The example helps a person prepare an application while keeping the final submission in their hands.</p></div></section>
+<section class="article-section module-section system-section" aria-labelledby="detail-module-reference-1"><div class="section-head"><div><p class="chapter-label"><b>02</b> System</p><h2 id="detail-module-reference-1">Preparation pipeline</h2></div></div><div class="topology" aria-label="Preparation pipeline sequence"><div class="topology-row" role="list"><div class="topology-stage" role="listitem"><strong>Source documents</strong></div><span class="topology-connector" aria-hidden="true">→</span><div class="topology-stage" role="listitem"><strong>Application preparation</strong></div><span class="topology-connector" aria-hidden="true">→</span><div class="topology-stage" role="listitem"><strong>Reviewable output</strong></div></div></div><p class="system-caption">Illustrative topology: source material enters a preparation step and produces output for human review.</p></section>
+<section class="article-section module-section decision-section" aria-labelledby="detail-module-reference-2"><div class="section-head"><div><p class="chapter-label"><b>03</b> Decision</p><h2 id="detail-module-reference-2">Keep the final action with the applicant</h2></div></div><div class="decision-relationship"><div class="decision-path decision-chosen"><h3>CHOSEN</h3><p>Assisted application</p></div><span class="decision-connector" aria-hidden="true">↔</span><div class="decision-path decision-avoided"><h3>NOT CHOSEN</h3><p>Autonomous submission</p></div></div><p class="project-copy decision-reason">Assistance makes preparation easier while preserving the applicant’s opportunity to review and correct the material before it is sent.</p><p class="decision-constraint">The example assumes submission remains a manual action.</p></section>
+<section class="article-section detail-section technical-section" aria-labelledby="detail-module-reference-3"><div class="section-head"><div><p class="chapter-label"><b>04</b> Technical</p><h2 id="detail-module-reference-3">A boundary between preparation and delivery</h2></div></div><div class="copy-stack"><p class="project-copy">Preparation produces an inspectable artifact. The workflow stops before delivery, giving the applicant a clear boundary at which to review the output.</p><p class="project-copy">This example describes a design relationship, not production behavior or a new canonical Project Story.</p></div></section>
+<section class="article-section module-section verification-section" aria-labelledby="detail-module-reference-4"><div class="section-head"><div><p class="chapter-label"><b>05</b> Verification</p><h2 id="detail-module-reference-4">Reviewed implementation state</h2></div></div><div class="verification-checkpoint"><p class="verification-marker"><span aria-hidden="true">●</span> REVIEWED STATE</p><dl class="verification-readouts"><div><dt>Tests</dt><dd>230 passed</dd></div><div><dt>Build</dt><dd>PASS</dd></div><div><dt>Release</dt><dd>v1.2.0</dd></div><div><dt>Runtime</dt><dd>Node.js 22</dd></div><div><dt>Platform</dt><dd>Local desktop</dd></div><div><dt>Package</dt><dd>Example CLI</dd></div></dl><p class="verification-caption">Illustrative prototype values only — not live results, released capabilities or verified facts about an existing project.</p></div></section>
+<section class="article-section module-section workflow-section" aria-labelledby="detail-module-reference-5"><div class="section-head"><div><p class="chapter-label"><b>06</b> Workflow</p><h2 id="detail-module-reference-5">Prepare, review, submit</h2></div></div><ol class="workflow-list"><li><span class="flow-index">01</span><h3>Prepare</h3><p>Create an application draft from the source documents.</p></li><li><span class="flow-index">02</span><h3>Review</h3><p>Inspect and correct the prepared material.</p></li><li><span class="flow-index">03</span><h3>Submit</h3><p>The applicant performs the final submission manually.</p></li></ol></section>
+    </article></main></body></html>

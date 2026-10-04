@@ -100,7 +100,27 @@ function validateModule(module, label) {
   requireText(module.title, `${label}.title`);
   requireText(module.label, `${label}.label`);
 
-  if (["overview", "technical"].includes(module.type)) {
+  if (module.type === "decision" || module.type === "verification") {
+    const allowed = module.type === "decision"
+      ? ["type", "label", "title", "chosen", "avoided", "reason", "constraint"]
+      : ["type", "label", "title", "items", "caption"];
+    const unsupported = Object.keys(module).filter((key) => !allowed.includes(key));
+    if (unsupported.length) throw new Error(`${label} contains unsupported properties: ${unsupported.join(", ")}.`);
+    if (module.type === "decision") {
+      for (const key of ["chosen", "avoided", "reason"]) requireText(module[key], `${label}.${key}`);
+      if (Object.hasOwn(module, "constraint")) requireText(module.constraint, `${label}.constraint`);
+    } else {
+      if (!Array.isArray(module.items) || module.items.length === 0) throw new Error(`${label}.items must contain at least one item.`);
+      Array.from(module.items).forEach((item, index) => {
+        const itemLabel = `${label}.items[${index}]`;
+        if (!item || typeof item !== "object" || Array.isArray(item)) throw new Error(`${itemLabel} must be an object.`);
+        if (Object.keys(item).some((key) => !["label", "value"].includes(key))) throw new Error(`${itemLabel} contains unsupported properties.`);
+        requireText(item.label, `${itemLabel}.label`);
+        requireText(item.value, `${itemLabel}.value`);
+      });
+      if (Object.hasOwn(module, "caption")) requireText(module.caption, `${label}.caption`);
+    }
+  } else if (["overview", "technical"].includes(module.type)) {
     requireTextList(module.paragraphs, `${label}.paragraphs`);
   } else if (module.type === "signal") {
     requireTextList(module.stages, `${label}.stages`);

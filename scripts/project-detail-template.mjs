@@ -76,6 +76,17 @@ function renderSystem(module, index) {
   return `<section class="article-section module-section system-section${variantClass}" data-reveal aria-labelledby="${module.id}"><div class="section-head"><div><p class="chapter-label"><b>${String(index + 1).padStart(2, "0")}</b> ${escapeHtml(module.label)}</p><h2 id="${module.id}">${escapeHtml(module.title)}</h2></div></div>${content}${caption}</section>`;
 }
 
+function renderDecision(module, index) {
+  const constraint = module.constraint ? `<p class="decision-constraint">${escapeHtml(module.constraint)}</p>` : "";
+  return `<section class="article-section module-section decision-section" data-reveal aria-labelledby="${module.id}"><div class="section-head"><div><p class="chapter-label"><b>${String(index + 1).padStart(2, "0")}</b> ${escapeHtml(module.label)}</p><h2 id="${module.id}">${escapeHtml(module.title)}</h2></div></div><div class="decision-relationship"><div class="decision-path decision-chosen"><h3>CHOSEN</h3><p>${escapeHtml(module.chosen)}</p></div><span class="decision-connector" aria-hidden="true">↔</span><div class="decision-path decision-avoided"><h3>NOT CHOSEN</h3><p>${escapeHtml(module.avoided)}</p></div></div><p class="project-copy decision-reason">${escapeHtml(module.reason)}</p>${constraint}</section>`;
+}
+
+function renderVerification(module, index) {
+  const items = module.items.map((item) => `<div><dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(item.value)}</dd></div>`).join("");
+  const caption = module.caption ? `<p class="verification-caption">${escapeHtml(module.caption)}</p>` : "";
+  return `<section class="article-section module-section verification-section" data-reveal aria-labelledby="${module.id}"><div class="section-head"><div><p class="chapter-label"><b>${String(index + 1).padStart(2, "0")}</b> ${escapeHtml(module.label)}</p><h2 id="${module.id}">${escapeHtml(module.title)}</h2></div></div><div class="verification-checkpoint"><p class="verification-marker"><span aria-hidden="true">●</span> REVIEWED STATE</p><dl class="verification-readouts">${items}</dl>${caption}</div></section>`;
+}
+
 function renderModule(project, module, index) {
   const current = { ...module, id: `detail-${project.slug}-${index}` };
   switch (current.type) {
@@ -88,6 +99,8 @@ function renderModule(project, module, index) {
     case "report-table": return renderReportTable(current, index);
     case "interactive": return renderInteractive(current, index);
     case "system": return renderSystem(current, index);
+    case "decision": return renderDecision(current, index);
+    case "verification": return renderVerification(current, index);
     default: throw new Error(`Unsupported detail module: ${current.type}`);
   }
 }
@@ -193,4 +206,4 @@ ${modules}
 `;
 }
 
-export const supportedDetailModules = new Set(["signal", "overview", "technical", "workflow", "output", "image", "report-table", "interactive", "system"]);
+export const supportedDetailModules = new Set(["signal", "overview", "technical", "workflow", "output", "image", "report-table", "interactive", "system", "decision", "verification"]);

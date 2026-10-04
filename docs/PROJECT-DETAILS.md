@@ -1,4 +1,4 @@
-# Project Detail source and generation
+# Project Article Grammar V2 — authoring contract
 
 `data/projects.mjs` is the canonical project definition source for both the homepage renderer and Project Detail generator. Homepage metadata stays in this file; a completed detail is represented by `detail: { status: "complete", modules: [...] }`.
 
@@ -15,6 +15,71 @@ node scripts/generate-site.mjs job-search-agent
 ```
 
 The renderer lives in `scripts/project-detail-template.mjs`. Generated pages are written to `work/<slug>/index.html`; do not edit those outputs directly. Keep legacy demos under `projects/<slug>/` and V5 embedded demos under `demos/<slug>/`.
+
+## Fixed grammar, variable composition
+
+**FIXED GRAMMAR, VARIABLE COMPOSITION.** Modules define approved forms of expression, not a mandatory sequence. Select and order modules according to the project's story. Do not standardize every story into the same six-section article. Both new modules are optional and require semantic justification.
+
+| Module | Semantic role and canonical content |
+| --- | --- |
+| `overview` | What the project is and why it exists; narrative `paragraphs`, not a stack dump. |
+| `signal` | High-level linear `stages`; stages need not be software components. |
+| `system` | Components, sources, storage, services and architecture relationships in non-empty text `rows`; optional `caption`. Existing `variant: "readable-rows"` is supported. |
+| `technical` | Meaningful mechanisms and constraints in `paragraphs`, not a generic technology list. |
+| `workflow` | User/system behavioral sequence in `steps` with `title` and `text`; distinct from architecture. |
+| `output` | Real capabilities or outputs in `items` with `title` and `text`; optional `caption`, no temporal sequence required. |
+| `interactive` | Genuine embedded interaction; strongest direct evidence where appropriate. |
+| `report-table` | Factual structured/table-like output. |
+| `image` | Genuine editorial evidence; do not default to screenshots or create a screenshot gallery. |
+| `decision` | An engineering choice, its alternative, rationale and optional constraint. |
+| `verification` | Factual reviewed-state readouts, not quality ratings. |
+
+Every module requires supported `type` and non-empty `label` and `title`. Copy lists, stages, rows, steps and items must be non-empty, with non-empty text values. All canonical text is escaped; arbitrary HTML is not supported. Keep renderer paths generic, with no project-specific conditionals.
+
+## Evidence policy
+
+Evidence is a semantic quality rule, not a mandatory new visual section.
+
+- **Source Evidence:** internal review evidence from source code, tests, workflows, releases and documentation.
+- **Story Evidence:** public factual information such as topology, workflow, runtime facts, implementation facts and outputs.
+- **Direct Evidence:** something the visitor directly experiences, such as an embedded interaction or live app/demo.
+
+A fact existing in source does not automatically belong in the public story. Expose evidence only when it improves understanding. Identify illustrative values explicitly; do not present them as live or verified project facts.
+
+## Decision modules
+
+```js
+{
+  type: "decision",
+  label: "Engineering choice",
+  title: "Keep submission under human control",
+  chosen: "Assisted application",
+  avoided: "Autonomous submission",
+  reason: "The user reviews the application before submitting it.",
+  constraint: "Submission remains a manual step."
+}
+```
+
+Only `type`, `label`, `title`, `chosen`, `avoided`, `reason`, `constraint` are allowed. All except `constraint` are required non-empty strings; `constraint` must also be non-empty when present. The shared renderer uses a semantic section, fixed CHOSEN / NOT CHOSEN headings, a choice relationship, editorial reason and optional constraint. This is an engineering fork, not a comparison matrix, scoring model or dashboard.
+
+## Verification modules
+
+```js
+{
+  type: "verification",
+  label: "Verification",
+  title: "Reviewed implementation state",
+  items: [
+    { label: "Tests", value: "230 passed" },
+    { label: "Build", value: "PASS" }
+  ],
+  caption: "Illustrative example values; not production project facts."
+}
+```
+
+Only `type`, `label`, `title`, `items`, `caption` are allowed. `items` is a required non-empty array of objects containing only required non-empty strings `label` and `value`. `caption` is optional and must be non-empty when present. The renderer emits a semantic `dl` beneath a fixed reviewed-state checkpoint marker. The marker and restrained green are renderer/CSS treatments; they are not data-controlled statuses. Values are factual readouts, never claims like QUALITY: EXCELLENT, SECURITY: SAFE or PERFORMANCE: AMAZING.
+
+Both new module schemas reject all unsupported properties, including `color`, `icon`, `severity`, `score`, `badge`, `green`, `progress`, `layout`, `variant`, `className`, `emphasis` and `status`. Do not add data-controlled visual fields, reviewed SHA/date fields or provenance objects inside either module. The only source cursor remains optional canonical `storySource: { lastReviewedCommit: "<full 40-character SHA>" }`: this story has been reviewed through that source revision. [CREATE](PROJECT-PUBLISHING.md) and [AUDIT / REFRESH](PROJECT-STORY-REFRESH.md) define when it can be recorded.
 
 ## Interactive modules
 

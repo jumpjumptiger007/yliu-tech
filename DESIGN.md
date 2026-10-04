@@ -1376,6 +1376,18 @@ Do not invent decorative imagery to fill space.
 
 The reusable `report-table` module presents structured public output as a native editorial table. Use a dark field, thin deep-green rules, mono column headings, off-white values, and restrained green emphasis for meaningful status cells. Keep the table horizontally scrollable when its minimum readable width exceeds the viewport, and provide its accessible label and explanatory note/caption in canonical data. Mark illustrative samples clearly; never imply that sample values are live.
 
+## Optional article grammar V2
+
+Fixed grammar, variable composition: modules are approved forms of expression, not a mandatory sequence. `decision` and `verification` are optional; use them only when semantically justified. Evidence is an editorial quality rule, not a mandatory visual section.
+
+### Decision
+
+An engineering fork / choice relationship belongs within the existing technical-magazine article. Reuse the normal section head, chapter labels, typography, dark field and article rhythm. Show chosen and avoided paths with restrained signal green on the CHOSEN label and connector; the avoided path is quieter. Place editorial reason below, with an optional constraint using a restrained rule. Keep the relationship flat, without dashboard cards, matrices or scoring. Desktop presents the paths around a relationship connector; compact/mobile stacks them with a small downward connector. Long text wraps safely.
+
+### Verification
+
+A reviewed-state checkpoint presents factual readouts, not a scorecard, analytics dashboard, KPI cards or badge wall. Reuse the section head, thin `line-strong` top boundary, one static restrained green checkpoint marker, quiet mono metadata, readable factual values and subtle dividers. Use approximately three columns where desktop width allows and one column on compact/mobile. Green remains a restrained signal, never a data-controlled quality/status color. The marker is a shared renderer/CSS treatment; module content does not select its appearance or add provenance fields.
+
 ## Bottom Contact
 
 Every Project Detail page ends with the shared Homepage `Get in touch.` Contact section.

@@ -16,8 +16,9 @@ This repository (`jumpjumptiger007/yliu-tech`) contains the current Portfolio V5
 - `work/<slug>/index.html` — generated Project Details
 - `demos/<slug>/` — embedded V5 project interactions
 - `projects/<slug>/` — legacy and historical project artifacts
-- `docs/PROJECT-DETAILS.md` — Project Detail authoring guide
-- `docs/PROJECT-STORY-REFRESH.md` — source-repository story refresh and audit workflow
+- `docs/PROJECT-PUBLISHING.md` — CREATE workflow for new Project Stories
+- `docs/PROJECT-DETAILS.md` — Project Article Grammar and authoring contract
+- `docs/PROJECT-STORY-REFRESH.md` — read-only AUDIT and approved REFRESH workflow
 - `DESIGN.md` — visual source of truth
 - `assets/brand/yal-mark.svg` — production brand mark
 
@@ -45,7 +46,7 @@ node scripts/check-html-structure.mjs
 
 `work/index.html` is the manually authored directory page and reads the canonical data at runtime. Files under `work/<slug>/index.html` are generated Project Detail output. Update the canonical data or shared renderer, then regenerate; do not edit generated pages manually.
 
-For `Refresh Project Story for <project>` or `Audit all Project Stories against their source repositories`, follow [Project Story Refresh](docs/PROJECT-STORY-REFRESH.md). It uses each canonical `githubUrl`, evidence review, and a verified commit baseline before changing stale claims.
+For a new Project Story, follow [CREATE](docs/PROJECT-PUBLISHING.md). For `Audit Project Story: <project>`, `Audit all Project Stories`, or `Refresh Project Story: <project>`, follow [AUDIT / REFRESH](docs/PROJECT-STORY-REFRESH.md). Audit changes no files; Refresh requires an approved plan. Both use the [authoring contract](docs/PROJECT-DETAILS.md).
 
 ## Hosting and contact
 

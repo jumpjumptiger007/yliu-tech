@@ -1,13 +1,16 @@
-# Project Story Refresh
+# Project Story Maintenance — AUDIT / REFRESH
 
-An on-demand, review-assisted workflow for keeping Portfolio stories accurate as their source repositories evolve. A README change does not trigger a website rewrite or publication.
+AUDIT = READ ONLY. REFRESH = MUTATION AFTER APPROVAL.
+
+Audit reviews whether an existing public story is stale. It never changes a repository file, generated output or `storySource.lastReviewedCommit`. Refresh corrects approved claims and may advance the cursor only after review and QA. A README change does not trigger a website rewrite or publication. New stories use [CREATE](PROJECT-PUBLISHING.md); both workflows follow [article grammar](PROJECT-DETAILS.md) and [DESIGN.md](../DESIGN.md).
 
 ## Entry points and boundaries
 
-- `Refresh Project Story for <project>`: review one canonical project, identified by its slug or title.
-- `Audit all Project Stories against their source repositories`: review each public project with a complete detail, classify differences, and refresh only stale claims.
+- `Audit Project Story: <project>` — one canonical project identified by slug or title.
+- `Audit all Project Stories` — all canonical public projects with complete details.
+- `Refresh Project Story: <project>` — plan and, after user approval, refresh one story.
 
-Preserve the current branch and unrelated dirty work. Follow the active conversation's scope and review requirements; when Control Room is active, use its designated C2C conversation for the required Gate review. This guide authorizes no commits, pushes, PR creation, merges, deployment, publishing, scheduled monitors, or upstream repository mutations. Leave the proposed changes reviewable in the working tree unless the user separately authorizes a publication action.
+Preserve the current branch and unrelated dirty work. Follow the active conversation's scope and review requirements; when Control Room is active, use its designated C2C conversation for required Gate review. This guide authorizes no commits, pushes, PR creation, merges, deployment, publishing, scheduled monitors or upstream repository mutations. Leave approved changes reviewable in the working tree unless separately authorized.
 
 ## Source map
 
@@ -23,65 +26,171 @@ Preserve the current branch and unrelated dirty work. Follow the active conversa
 | Renderer | `scripts/project-detail-template.mjs` |
 | Visual rules | `DESIGN.md` |
 
-For example, resolve “Refresh Project Story for Samantha AI Assistant” to its canonical entry and read that entry's `githubUrl`. Never infer a repository from its name, live URL, a legacy `projects/` directory, or a similar GitHub project. If `githubUrl` is null, report **NO CANONICAL SOURCE REPOSITORY** for that project. Do not substitute a repository or invent a baseline; continue other projects in an all-project audit.
+For example, resolve “Refresh Project Story for Samantha AI Assistant” to its canonical entry and read that entry's `githubUrl`. Never infer a repository from its name, live URL, a legacy `projects/` directory, or a similar GitHub project. If `githubUrl` is null, classify **UNVERIFIED** and report reason **NO CANONICAL SOURCE REPOSITORY** for that project. Do not substitute a repository or invent a baseline; continue other projects in an all-project audit.
 
-## 1. Establish the reviewed revision
+## Source verification and minimal cursor
 
-Inspect the public repository identified by `githubUrl`, using GitHub access or a verified checkout of that exact repository. Resolve its current default-branch head to a full commit SHA and pin the evidence review to that revision. Record file paths, relevant release/tag names, and immutable commit links in the execution report so later reviewers can verify the claims. Do not expose credentials or copy private material into public stories.
-
-The optional canonical cursor is deliberately small:
+Inspect the public repository identified by canonical `githubUrl`, through GitHub access or a verified checkout of that exact repository. Resolve current default-branch HEAD to a full 40-character SHA and pin evidence review to it. Record relevant source paths, release/tag names and immutable commit links in the report; do not expose credentials or private material.
 
 ```js
 storySource: {
-  lastReviewedCommit: "<verified full 40-character hexadecimal commit SHA>",
+  lastReviewedCommit: "<verified full 40-character hexadecimal commit SHA>"
 }
 ```
 
-The placeholder above is explanatory, not valid project data. Store no guessed, abbreviated, or demonstration SHA. The generator validates the object and full SHA format offline; it never fetches repositories or advances the cursor. Verification that a SHA belongs to the canonical repository is part of this review.
+This explanatory placeholder is not valid project data. Never store a guessed, abbreviated or demonstration SHA. The cursor means “This Project Story has been reviewed through this source revision.” The generator validates its strict shape and SHA format offline; it never fetches source or advances the cursor. Verify SHA membership in the canonical repository during review. Do not introduce `auditStatus`, `sourcePaths`, `confidence`, `relevantCommits`, `storyVersion`, `lastRefreshReason` or verification metadata objects.
 
-- **Baseline exists:** verify the saved SHA exists in the canonical repository, then inspect relevant changes through the pinned reviewed head. Read current primary documentation/config/source as necessary; commit messages alone do not substantiate capabilities.
-- **No baseline:** compare the current public repository state at the pinned head with every relevant existing story claim. Establish the cursor only after this initial review is complete.
-- **Baseline inaccessible or history diverged:** report the gap. Do a documented current-state comparison if source access permits; do not claim a complete delta audit. Replace the cursor only after that review succeeds.
-- **Repository inaccessible or evidence incomplete:** report **UNVERIFIED** and leave the cursor unchanged. Do not infer new capabilities.
+If the baseline is inaccessible or history diverged, disclose the gap. A documented current-state comparison may be possible, but do not claim a complete delta audit. If source/evidence cannot be verified, classify UNVERIFIED and leave the cursor unchanged.
 
-Advancing the cursor means “the story has been reviewed through this commit.” It can advance after a completed review that finds no material changes. For a stale story, complete the canonical update, QA, and required review before considering the baseline established. If review or QA fails, do not advance it to imply completed work.
+## AUDIT Pass 1 — revision screen
 
-## 2. Inspect evidence relevant to public claims
+For each canonical public Project Story:
 
-Review the following when present and relevant; every repository need not contain every category:
+1. Resolve canonical `githubUrl`.
+2. Read `storySource.lastReviewedCommit` if present.
+3. Resolve the source repository's current default-branch HEAD.
 
-- README and primary usage/architecture documentation;
-- CHANGELOG, release notes, tags, and releases;
-- package, runtime, build, and configuration files;
-- architecture-relevant source and configuration;
-- public workflows establishing scheduling, delivery, distribution, or deployment behavior;
-- public UI/output, source implementing it, and screenshots whose revision is known;
-- relevant commits and changed files since the verified baseline.
+If the verified baseline equals HEAD, classify CURRENT and stop reviewing that project. If revisions differ, continue to Pass 2. If no baseline exists, continue to Pass 2 as an initial full verification of existing claims. If the source cannot be verified, classify UNVERIFIED. A null `githubUrl` is UNVERIFIED with reason NO CANONICAL SOURCE REPOSITORY; never substitute a repository, and continue other projects in an all-project audit.
 
-Distinguish released behavior from default-branch work in progress. A tag, release, or repository name alone is insufficient evidence of a feature. Resolve contradictions against implementation and current authoritative documentation, and disclose unresolved differences.
+## AUDIT Pass 2 — claim-directed review
 
-## 3. Classify changes before editing
+Do not automatically read an entire source repository. First inspect baseline-to-current commits/diff, changed files and relevant release/changelog information. Then inspect only the source/docs required to verify claims already exposed in the public story, including surfaced Homepage facts. Without a baseline, review the current source against every relevant existing claim.
 
-**Material public changes** can make a current claim stale: added/removed user-facing features; changed workflows; story-relevant architecture or technology stack; deployment/distribution or meaningful release behavior; lifecycle/status; visible UI/output; changed limitations; supported platforms/providers/models/hardware; or meaningful privacy/data-flow behavior.
+README alone and commit messages alone are insufficient evidence. Review relevant primary usage/architecture documentation, package/runtime/build/config files, architecture source, tests, public workflows, released outputs and known-revision screenshots as needed. Distinguish released behavior from default-branch work in progress. Tags, releases and repository names alone do not establish features. Resolve contradictions against implementation and authoritative documentation; disclose unresolved differences.
 
-**Ordinary changes** normally require no story edit: formatting, typo fixes, README wording without product meaning, dependency-only updates, tests, comments/types/lint, internal refactors, or CI maintenance with unchanged public behavior. A dependency change becomes material only when evidence establishes a public difference described by the story.
+Formatting, typo fixes, dependency-only updates, tests, comments, lint, internal refactors and CI maintenance normally have no story impact when public behavior stays accurate. They matter when evidence establishes a changed fact already exposed by the story. List the exact stale claim, canonical field/module, source evidence and proposed correction. Keep ambiguous claims unchanged. Do not rewrite accurate prose merely because source revision changed.
 
-List the exact stale claim, canonical field/module, repository evidence, and proposed factual correction. Keep ambiguous claims unchanged and report the uncertainty. Do not rewrite accurate prose merely to make it sound newer.
+Use exactly these classifications:
 
-## 4. Update canonical data only
+| Classification | Meaning |
+| --- | --- |
+| CURRENT | Source revision unchanged. |
+| NO STORY IMPACT | Source changed; existing public story remains accurate. |
+| FACT UPDATE | Volatile facts changed: version, release, package, platform, runtime, tests, build or verification state. |
+| SYSTEM UPDATE | Architecture, topology, workflow, behavior, limitation, implementation model or data flow changed. |
+| PRODUCT CHANGE | Purpose, positioning or primary user experience materially changed. |
+| UNVERIFIED | Evidence unavailable or insufficient. |
 
-Edit `data/projects.mjs` for the reviewed project:
+If the source delta is unreasonably large, Audit may classify PRODUCT CHANGE and recommend dedicated replanning rather than consuming unlimited context. Explain that the delta requires replanning rather than asserting unverified product behavior. Only Refresh, after approval, may mutate content or the cursor.
 
-1. Correct only stale `detail.modules` claims.
-2. Change title, summary, type, status, year, links, or other metadata only when the same fact has changed.
-3. Update `homepagePresentation`, `systemPreview`, or feature fields only if they explicitly surface that changed fact on Homepage.
-4. Update an existing SEO override only if it has become factually stale.
+## Single-project Audit output
 
-Work consumes canonical metadata at runtime; do not hand-edit cards to duplicate those facts. Never hand-edit `work/<slug>/index.html`. A prose refresh should not require renderer/schema changes or a visual redesign. Keep unrelated projects untouched.
+```text
+PROJECT STORY AUDIT
 
-## 5. Regenerate and validate
+Project:
+Source:
+Reviewed baseline:
+Current source HEAD:
 
-For an actual story edit, from the repository root:
+Classification:
+
+Change summary:
+- ...
+
+Story impact:
+Overview              CURRENT / STALE
+System topology       CURRENT / STALE
+Technical             CURRENT / STALE
+Workflow              CURRENT / STALE
+Homepage facts        CURRENT / STALE
+
+Recommended action:
+
+Suggested scope:
+- ...
+
+Visual change required:
+YES / NO
+
+Evidence confidence:
+VERIFIED / UNVERIFIED
+
+Files changed: NONE
+```
+
+When evidence is unavailable, identify which impact assessments cannot be established; do not imply CURRENT is verified. Every Audit ends with `Files changed: NONE`. Audit must not update `storySource.lastReviewedCommit` and must not modify any repository file, even for NO STORY IMPACT.
+
+## All-project Audit output
+
+```text
+PROJECT STORY AUDIT
+
+Projects reviewed: N
+
+CURRENT             N
+NO STORY IMPACT     N
+FACT UPDATE         N
+SYSTEM UPDATE       N
+PRODUCT CHANGE      N
+UNVERIFIED          N
+
+01 Project A    CURRENT
+02 Project B    SYSTEM UPDATE
+...
+
+Files changed: NONE
+```
+
+Only changed/problematic projects need expanded explanations. Put any expanded explanations before the final `Files changed: NONE` line. No cursor or repository mutation is permitted.
+
+## REFRESH — approved plan before mutation
+
+For `Refresh Project Story: <project>`, use a recent Audit pinned to current source HEAD. If none exists, perform the equivalent factual review first. Recheck source revision if the prior audit is no longer current. Before any mutation, produce:
+
+```text
+PROJECT STORY REFRESH PLAN
+
+Project:
+Classification:
+
+Keep unchanged:
+- ...
+
+Update:
+- ...
+
+Remove:
+- ...
+
+Add:
+- ...
+
+Article structure:
+UNCHANGED / PROPOSED CHANGE
+
+Evidence changes:
+- ...
+
+Visual changes:
+NONE / ...
+
+Source after refresh:
+<full SHA>
+
+Expected production files:
+- ...
+
+Validation:
+- ...
+```
+
+Mutation begins only after user approval of this plan. A Product Change may need a new Project Story Plan under CREATE before the Refresh Plan can be approved. New visual grammar requires Visual Acceptance; routine updates reuse accepted grammar.
+
+## Four Refresh levels
+
+1. **Cursor-only refresh:** for NO STORY IMPACT, update only `storySource.lastReviewedCommit` after completed review and approval. Generated public content should remain unchanged.
+2. **Fact refresh:** correct factual values such as version, release, package, platform, runtime, tests/build/verification facts. No structural rewrite.
+3. **System refresh:** update relevant `signal`, `system`, `technical`, `workflow` or `output` claims. Preserve accepted article composition unless actual system changes require otherwise.
+4. **Product refresh:** purpose or experience changes may require a new Project Story Plan because the existing article composition may no longer fit.
+
+Do not broadly rewrite accurate text merely because source revision changed.
+
+## Canonical mutation, regeneration and QA
+
+Edit only approved canonical fields in `data/projects.mjs`. Correct stale `detail.modules` claims; change title, summary, type, status, year, links or other metadata only when the fact changed. Update `homepagePresentation`, `systemPreview` or feature fields only where they expose that changed fact. Update SEO overrides only when factually stale. Work consumes canonical metadata at runtime; never duplicate it by hand-editing cards. Generated pages are never directly edited. A prose refresh should not require renderer/schema changes or redesign; keep unrelated projects untouched.
+
+After approved mutation:
 
 ```sh
 node scripts/generate-site.mjs <slug>
@@ -91,14 +200,8 @@ node --check data/projects.mjs
 git diff --check
 ```
 
-Run `node --check <file>` for any other changed JS/MJS source. The generator validates canonical definitions, regenerates the affected detail, and refreshes sitemap/robots. Inspect those generated diffs and confirm they follow the canonical changes. If several stories change, regenerate all with `node scripts/generate-site.mjs` and perform the normal whole-site regression checks. Baseline-only changes should generate identical public output.
+Run syntax checks for other changed JS/MJS. Inspect generated diffs, sitemap and robots against canonical changes. Regenerate all when several stories change or a shared renderer changes. Cursor-only refreshes must produce identical public output.
 
-Render the affected Project Detail at representative desktop and mobile widths (including 1440, 390, and 320; add 1920 for long/new layout content). Check changed copy, hierarchy, clipping, horizontal overflow, navigation/contact, keyboard focus, console/resource errors, and any affected demo. Inspect Homepage when it surfaces changed facts and Work when title/summary/type/status changes. Preserve accepted typography and layout unless the new content reproduces a defect. Record screenshots and actual command results; generator success alone does not prove rendered quality.
+Render affected details at representative desktop/mobile widths (1440, 390, 320; add 1920 for long/new layouts). Check copy, hierarchy, clipping, overflow, navigation/contact, keyboard focus, reduced motion, console/resource errors and affected demos. Inspect Homepage where changed facts appear and Work when title/summary/type/status changes. Preserve accepted typography/layout unless new content reveals a defect. Record screenshots and actual command results; generation alone does not establish rendered quality.
 
-## 6. Complete the review and report
-
-Report project/source URL, previous baseline (or none), pinned reviewed SHA, evidence inspected, material versus ignored changes, exact stale claims corrected, files changed, generation/QA results, and anything unverified. Complete the active workflow's independent review when required. Record the verified `lastReviewedCommit` only after the source/story comparison and required QA/review succeed; validate again after adding it.
-
-For an all-project audit, iterate the canonical public stories with complete details. Report each as **CURRENT**, **REFRESHED**, **UNVERIFIED**, or **NO CANONICAL SOURCE REPOSITORY**; include the reviewed revision and any baseline change. An audit classifies first, edits only supported stale claims, and does not automatically rewrite all stories. Repository gaps need not stop unrelated reviews.
-
-The sequence is repository evidence → review → canonical story update when needed → regeneration → QA → required review. Publication remains a separate user-authorized action.
+Complete required review before advancing the cursor to imply completed work. If review or QA fails, do not advance it. Record the full verified `lastReviewedCommit` only after the source/story comparison, approved update and required QA/review succeed; validate again after recording it. Report project/source URL, prior baseline, pinned SHA, evidence inspected, exact corrections, files changed, generation/QA results and anything unverified. Publication remains a separate authorized action.

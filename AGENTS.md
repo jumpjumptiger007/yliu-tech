@@ -8,6 +8,9 @@
 - Treat `data/projects.mjs` as the canonical source for project content and metadata. Treat `data/site.mjs` as the source for site identity and canonical URL helpers.
 - `work/index.html` is the manually authored Work directory and reads project data at runtime. Do not replace it with generated output.
 - Keep V5 embedded demos under `demos/<slug>/`. `projects/<slug>/` contains legacy or historical artifacts; preserve that role when adding project files.
+- New Project Story (CREATE): follow `docs/PROJECT-PUBLISHING.md`, then `docs/PROJECT-DETAILS.md`.
+- Audit or Refresh an existing Project Story: follow `docs/PROJECT-STORY-REFRESH.md`, then `docs/PROJECT-DETAILS.md`. Audit is always read-only and cannot advance the source cursor. CREATE and REFRESH mutation starts only after the required user-approved plan.
+- Detailed workflow contracts live in those documents; visual rules live in `DESIGN.md`.
 - For Project Detail authoring and SEO rules, follow `docs/PROJECT-DETAILS.md` and `docs/SEO.md`. Update those documents when changing their documented authoring contracts.
 
 ## Generated output and validation
