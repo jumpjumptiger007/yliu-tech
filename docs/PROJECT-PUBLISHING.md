@@ -8,6 +8,10 @@ The sequence is source repository → repository audit → product understanding
 
 Verify the exact source repository; never guess it from a project name. Resolve its default-branch HEAD to a full 40-character SHA and pin the review to that revision. Inspect implementation, relevant tests/configuration/workflows, releases and documentation needed to understand purpose, behavior and constraints. README alone and commit messages alone are insufficient evidence. Distinguish released behavior from work in progress; disclose unavailable evidence rather than inventing claims. Do not expose credentials or private source material.
 
+If the active portfolio planning environment cannot access the canonical external source repository, stop source-dependent planning and request a verified **Source Audit Handoff**. Do not guess repository state, invent the source HEAD, infer architecture or capabilities from the repository name, or begin portfolio mutation.
+
+The handoff must identify the canonical source repository and the exact full 40-character reviewed default-branch HEAD SHA. It must contain separately verified primary-source findings, with evidence references pinned to that revision, sufficient to support the Project Story Plan under the source review requirements above. Disclose evidence gaps; a handoff does not lower those requirements. Once a sufficient verified handoff is supplied, the planning agent may continue CREATE using it for external source facts while independently reading the current portfolio repository through its own connector. The complete Project Story Plan still requires user approval before portfolio mutation.
+
 The first formal output is:
 
 ```text
