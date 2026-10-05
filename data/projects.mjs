@@ -797,6 +797,83 @@ export const projectsData = [
       ],
     },
   },
+  {
+    slug: "codex-autopilot",
+    number: 11,
+    title: "Codex Autopilot",
+    type: "AI Orchestration",
+    year: 2026,
+    status: "active",
+    featured: false,
+    selectedSystem: false,
+    summary: "An autonomous orchestration layer for Codex that advances a sprint one reviewed task at a time, with explicit scope and stop boundaries.",
+    liveUrl: null,
+    githubUrl: "https://github.com/jumpjumptiger007/codex-autopilot",
+    storySource: {
+      lastReviewedCommit: "de1d1ba36cf93069c2b3e113918482eda3f652c6",
+    },
+    hidden: false,
+    detail: {
+      status: "complete",
+      actions: { liveDemo: false },
+      titleLines: ["Codex", "Autopilot"],
+      modules: [
+        {
+          type: "overview",
+          label: "Project overview",
+          title: "A thin orchestration layer",
+          paragraphs: [
+            "Codex Autopilot builds on Codex with ChatGPT, the task-level workflow where work is planned, executed through Codex, independently reviewed, and repaired or recovered within one task. Autopilot carries an approved sprint across bounded stages called Gates, deciding whether to advance or stop after each reviewed task.",
+            "The implementation is deliberately small: a policy and orchestration skill with no hosted application. Autopilot owns sprint-level continuation; the task layer owns each bounded task through execution, review, repair, and recovery.",
+          ],
+        },
+        {
+          type: "system",
+          label: "Responsibility boundaries",
+          title: "Two layers, one task owner",
+          rows: [
+            ["Autopilot", "Sprint Envelope", "Bounded Gate selection", "Continuation between completed Gates", "Sprint stop decision"],
+            ["Task layer", "Readiness", "Planning", "Execution", "Independent review", "Repairs within the task", "Recovery state"],
+          ],
+          caption: "The task layer owns the current bounded task through execution, review, repair, and recovery. Autopilot does not take over an executing Gate; it chooses what follows only after that Gate’s reviewed task is complete.",
+        },
+        {
+          type: "decision",
+          label: "Engineering choice",
+          title: "Separate sprint orchestration from task execution",
+          chosen: "A thin sprint-orchestration layer above reviewed tasks",
+          avoided: "A second task planning and execution protocol",
+          reason: "The task layer already owns readiness, planning, execution, independent review, repair, and recovery. Duplicating those responsibilities would create competing responsibilities and state models.",
+          constraint: "Autopilot advances only between completed Gates.",
+        },
+        {
+          type: "workflow",
+          label: "Sprint sequence",
+          title: "One reviewed task per Gate",
+          steps: [
+            { title: "Explicitly invoke Autopilot", text: "Ask to use Codex Autopilot for the sprint. Establish task-layer readiness before Gate 1." },
+            { title: "Define the Sprint Envelope", text: "Set the goal, allowed scope, constraints, success criteria, and exclusions or stop conditions." },
+            { title: "Select one bounded Gate", text: "Choose the next task within the approved envelope, using the sprint’s current progress." },
+            { title: "Run one reviewed task", text: "Each Gate contains one complete bounded task, including planning, execution, and independent review." },
+            { title: "Keep repairs inside that Gate", text: "Repairs remain part of the same task and Gate; they do not create a new Gate." },
+            { title: "Complete review before advancing", text: "Finish the current task’s review and any in-scope repairs before a later Gate can begin." },
+            { title: "Evaluate, advance, or stop", text: "Check the sprint criteria. Select the next in-scope Gate, finish when the goal is met, or stop at a required boundary." },
+          ],
+        },
+        {
+          type: "technical",
+          label: "Operating constraints",
+          title: "Autonomy with explicit boundaries",
+          paragraphs: [
+            "Autopilot requires an explicit invocation or a clear request to use it for a sprint. Ordinary requests such as “continue,” “finish this,” “do it,” or “automatic,” and Goal mode alone, do not authorize Autopilot.",
+            "Before Gate 1, task-layer readiness must be established. Existing task context and recovery state are reused where available; task setup and recovery remain task-layer responsibilities.",
+            "The Sprint Envelope bounds the goal, allowed scope, constraints, success criteria, and exclusions or stop conditions. Ordinary implementation bugs, test or build failures, and review-requested repairs can continue inside the approved Gate and envelope.",
+            "Autopilot stops when success criteria are met or progress requires a material product or architecture decision outside the envelope, meaningful scope expansion, approval for a destructive or irreversible action, or a security/privacy judgment. Credentials, login, CAPTCHA, 2FA, consent, task-level iteration or blocking limits, and genuine external dependencies also require a stop. Required human authorization remains binding.",
+          ],
+        },
+      ],
+    },
+  },
 ].sort((left, right) => left.number - right.number);
 
 export const hasCompleteDetail = (project) => project.detail?.status === "complete";
