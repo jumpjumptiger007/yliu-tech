@@ -24,9 +24,8 @@
 }
 
 * { box-sizing: border-box; }
-html { min-width: 320px; scroll-behavior: smooth; background: var(--bg); }
+html { scroll-behavior: smooth; background: var(--bg); }
 body {
-  min-width: 320px;
   margin: 0;
   overflow-x: clip;
   background:

@@ -302,7 +302,18 @@ function checkProjectCollections() {
   const homepage = projectsData.filter(isHomepageSelectedProject);
   const directory = projectsData.filter(isPublicProject);
   check(sortedNumbers(homepage).join(",") === "1,2,3,4,5,6,7,8,9,10", "Canonical Homepage curation must contain exactly projects 01–10.");
-  check(sortedNumbers(directory).slice(0, 12).join(",") === "1,2,3,4,5,6,7,8,9,10,11,12", "The current public Work Directory must include projects 01–12; later public projects may be added.");
+  check(sortedNumbers(directory).join(",") === "1,2,3,4,5,6,7,8,9,10,11,12", "Canonical public Work Directory must contain exactly projects 01–12.");
+  const selectedSlugs = ["interdemtv", "codex-provider-switcher", "job-search-agent", "samantha-ai-assistant", "signal-atlas", "codex-autopilot", "personal-tech-magazine", "pollen-alert-germany", "qpsk-visualization", "sonic-link"];
+  const exactSequence = (collection, slugs) => [...collection].sort((left, right) => left.number - right.number)
+    .map((project) => `${project.number}:${project.slug}`).join(",") === slugs.map((slug, index) => `${index + 1}:${slug}`).join(",");
+  check(exactSequence(homepage, selectedSlugs), "Homepage must contain the exact approved sequence with Sonic Link at 10.");
+  check(exactSequence(directory, [...selectedSlugs, "local-voice-assistant", "password-generator"]), "Work must contain the exact approved sequence with Sonic Link at 10 and no Bulk Email Sender.");
+  const sonicLink = projectsData.find((project) => project.slug === "sonic-link");
+  const bulkEmailSender = projectsData.find((project) => project.slug === "bulk-email-sender");
+  check(sonicLink?.number === 10 && isHomepageSelectedProject(sonicLink) && isIndexableProject(sonicLink), "Sonic Link must be selected, public and indexable project 10.");
+  check(bulkEmailSender?.number === 13 && bulkEmailSender.hidden === true && bulkEmailSender.homepageSelected === false && bulkEmailSender.seo?.indexable === false && hasCompleteDetail(bulkEmailSender), "Bulk Email Sender must retain its complete detail as hidden, non-indexable project 13.");
+  check(projectsData.filter(hasCompleteDetail).length === 13, "Exactly 13 complete Project Details must remain.");
+  check(projectsData.filter(isIndexableProject).length === 12, "Exactly 12 Project Details must be indexable.");
   check(homepage.every(isPublicProject), "Homepage-selected projects must all be public.");
   check(!homepage.some((project) => ["local-voice-assistant", "password-generator"].includes(project.slug)), "Projects 11 and 12 must stay outside Homepage curation.");
   const localVoiceAssistant = projectsData.find((project) => project.slug === "local-voice-assistant");
