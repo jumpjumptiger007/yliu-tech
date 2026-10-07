@@ -2,7 +2,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { canonicalHomeUrl, canonicalWorkUrl, canonicalProjectUrl, siteConfig } from "../data/site.mjs";
-import { hasCompleteDetail, isIndexableProject, projectsData } from "../data/projects.mjs";
+import { hasCompleteDetail, homepageProjectUrl, isHomepageSelectedProject, isIndexableProject, isPublicProject, projectsData } from "../data/projects.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const failures = [];
@@ -46,6 +46,78 @@ function decodeHtml(value) {
     "&apos;": "'",
     "&#39;": "'",
   })[entity]);
+}
+
+function fallbackMarkup(html, id, page) {
+  const idToken = `id="${id}"`;
+  const idIndex = html.indexOf(idToken);
+  const containerStart = idIndex < 0 ? -1 : html.lastIndexOf("<div", idIndex);
+  const containerEnd = containerStart < 0 ? -1 : html.indexOf(">", idIndex);
+  check(idIndex >= 0 && containerStart >= 0 && containerEnd > idIndex, `${page}: expected one #${id} project container.`);
+  if (idIndex < 0 || containerEnd <= idIndex) return "";
+  const start = html.indexOf("<!-- PROJECT FALLBACK START -->", containerEnd + 1);
+  const end = html.indexOf("<!-- PROJECT FALLBACK END -->", start + 1);
+  check(start >= 0 && end > start, `${page}: canonical project fallback markers are missing or out of order.`);
+  if (start < 0 || end <= start) return "";
+  const fragment = html.slice(start + "<!-- PROJECT FALLBACK START -->".length, end);
+  check((html.match(/<!-- PROJECT FALLBACK START -->/g) ?? []).length === 1 && (html.match(/<!-- PROJECT FALLBACK END -->/g) ?? []).length === 1, `${page}: fallback markers must be unique.`);
+  return fragment;
+}
+
+function textContent(markup) {
+  return decodeHtml(markup.replace(/<[^>]*>/g, "").trim());
+}
+
+function checkHomepageFallback(html) {
+  const page = "index.html";
+  const fragment = fallbackMarkup(html, "project-rows", page);
+  const expected = projectsData.filter(isHomepageSelectedProject).sort((a, b) => Number(a.number) - Number(b.number));
+  const rows = [...fragment.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a\s*>/gi)];
+  check(rows.length === expected.length, `${page}: no-JavaScript Selected Work must expose ${expected.length} direct project links; found ${rows.length}.`);
+  check(tags(fragment, "article").length === 0, `${page}: Selected Work fallback must preserve the flat editorial ledger.`);
+  expected.forEach((project, index) => {
+    const row = rows[index];
+    if (!row) return;
+    const openingTag = row[0].match(/^<a\b[^>]*>/i)?.[0] ?? "";
+    const label = String(project.number).padStart(2, "0");
+    check(attribute(openingTag, "class")?.split(/\s+/).includes(`status-${project.status}`), `${page}: fallback project ${label} has an incorrect status class.`);
+    check(attribute(openingTag, "href") === homepageProjectUrl(project), `${page}: fallback project ${label} has an incorrect href or order.`);
+    check(attribute(openingTag, "aria-label") === `Open ${project.title}`, `${page}: fallback project ${label} has an incorrect accessible name.`);
+    check(textContent(row[1].match(/<span\b[^>]*class=["']row-number["'][^>]*>([\s\S]*?)<\/span>/i)?.[1] ?? "") === label, `${page}: fallback project ${label} has an incorrect number.`);
+    check(textContent(row[1].match(/<span\b[^>]*class=["']row-title["'][^>]*>([\s\S]*?)<\/span>/i)?.[1] ?? "") === project.title, `${page}: fallback project ${label} title is missing or out of order.`);
+    check(textContent(row[1].match(/<span\b[^>]*class=["']row-type["'][^>]*>([\s\S]*?)<\/span>/i)?.[1] ?? "") === project.type, `${page}: fallback project ${label} type is missing or stale.`);
+    check(textContent(row[1].match(/<span\b[^>]*class=["']row-status["'][^>]*>([\s\S]*?)<\/span>/i)?.[1] ?? "") === project.status, `${page}: fallback project ${label} status is missing or stale.`);
+    check(textContent(row[1].match(/<span\b[^>]*class=["']row-year["'][^>]*>([\s\S]*?)<\/span>/i)?.[1] ?? "") === String(project.year), `${page}: fallback project ${label} year is missing or stale.`);
+  });
+  check(!fragment.includes("local-voice-assistant") && !fragment.includes("password-generator"), `${page}: public projects 11 and 12 must stay outside Selected Work.`);
+}
+
+function checkWorkFallback(html) {
+  const page = "work/index.html";
+  const fragment = fallbackMarkup(html, "work-cards", page);
+  const expected = projectsData.filter(isPublicProject).sort((a, b) => Number(a.number) - Number(b.number));
+  const cards = [...fragment.matchAll(/<article\b([^>]*)>([\s\S]*?)<\/article\s*>/gi)];
+  check(cards.length === expected.length, `${page}: no-JavaScript Work Directory must expose ${expected.length} project cards; found ${cards.length}.`);
+  const count = tags(html, "b").find((tag) => attribute(tag, "id") === "work-count");
+  const countMarkup = count ? html.match(/<b\b[^>]*id=["']work-count["'][^>]*>([\s\S]*?)<\/b>/i)?.[1]?.trim() : null;
+  check(countMarkup === String(expected.length).padStart(2, "0"), `${page}: static public project count must match canonical public projects (${expected.length}).`);
+  expected.forEach((project, index) => {
+    const card = cards[index];
+    if (!card) return;
+    const markup = card[0];
+    const links = tags(markup, "a");
+    const label = String(project.number).padStart(2, "0");
+    check(links.length === 1, `${page}: project ${label} card must expose exactly one link.`);
+    check(attribute(links[0] ?? "", "href") === `${project.slug}/`, `${page}: fallback project ${label} has an incorrect href or order.`);
+    check(markup.includes(`status-${project.status}`), `${page}: fallback project ${label} has an incorrect status class.`);
+    check(textContent(markup.match(/<div\b[^>]*class=["']card-head["'][^>]*>\s*<span>([\s\S]*?)<\/span>/i)?.[1] ?? "") === project.type, `${page}: fallback project ${label} type is missing or stale.`);
+    check(textContent(markup.match(/<div\b[^>]*class=["']card-head["'][^>]*>[\s\S]*?<b>([\s\S]*?)<\/b>/i)?.[1] ?? "") === project.status, `${page}: fallback project ${label} status is missing or stale.`);
+    check(textContent(markup.match(/<p\b[^>]*class=["']card-no["'][^>]*>([\s\S]*?)<\/p>/i)?.[1] ?? "") === label, `${page}: fallback project ${label} has an incorrect number.`);
+    check(textContent(markup.match(/<h3\b[^>]*class=["']card-title["'][^>]*>([\s\S]*?)<\/h3>/i)?.[1] ?? "") === project.title, `${page}: fallback project ${label} title is incorrect.`);
+    check(textContent(markup.match(/<p\b[^>]*class=["']card-summary["'][^>]*>([\s\S]*?)<\/p>/i)?.[1] ?? "") === project.summary, `${page}: fallback project ${label} summary is missing or stale.`);
+    check(/<span\b[^>]*class=["']card-cta["']/.test(markup) && markup.includes("READ ARTICLE") && markup.includes('aria-hidden="true">↗'), `${page}: fallback project ${label} is missing the visible READ ARTICLE CTA.`);
+  });
+  check(tags(fragment, "a").length === expected.length, `${page}: fallback must not contain duplicate project detail links.`);
 }
 
 function expectMeta(html, page, attributeName, key, expectedValue) {
@@ -157,6 +229,7 @@ async function checkWorkDirectory() {
   const page = "work/index.html";
   const html = await readPage(page);
   if (!html) return;
+  checkWorkFallback(html);
   const title = "Work — Yiqiang Adrian Liu";
   const description = "The complete work directory: software, tools, systems, and experiments by Yiqiang Adrian Liu.";
   expectTitleAndDescription(html, page, title);
@@ -190,6 +263,7 @@ async function checkHomepage() {
   const page = "index.html";
   const html = await readPage(page);
   if (!html) return;
+  checkHomepageFallback(html);
   expectTitleAndDescription(html, page, siteConfig.homepageTitle);
   expectMeta(html, page, "name", "description", siteConfig.homepageDescription);
   const canonical = expectCanonical(html, page, canonicalHomeUrl);
@@ -217,6 +291,27 @@ async function checkHomepage() {
   check(person?.url === canonicalHomeUrl && person?.image === new URL(siteConfig.profileImage, `${siteConfig.url}/`).href, `${page}: Person URL or image is incorrect.`);
   check(person?.jobTitle === "Independent Developer & Builder", `${page}: Person jobTitle is incorrect.`);
   check(Array.isArray(person?.sameAs) && person.sameAs.includes(siteConfig.githubUrl), `${page}: Person must include the configured GitHub profile.`);
+
+  check(html.includes("03</span> CURATED INDEX") && html.includes("<h2 id=\"index-title\">SELECTED WORK</h2>"), `${page}: curated section label or heading is incorrect.`);
+  check(html.includes("Ten selected projects from the complete directory of software, tools, systems, and experiments."), `${page}: curated section description is incorrect.`);
+  check(html.includes("CURATED INDEX / 10 ENTRIES") && html.includes("BROWSE FULL DIRECTORY"), `${page}: curated note or full-directory link is incorrect.`);
+}
+
+function checkProjectCollections() {
+  const sortedNumbers = (projects) => projects.map((project) => Number(project.number)).sort((left, right) => left - right);
+  const homepage = projectsData.filter(isHomepageSelectedProject);
+  const directory = projectsData.filter(isPublicProject);
+  check(sortedNumbers(homepage).join(",") === "1,2,3,4,5,6,7,8,9,10", "Canonical Homepage curation must contain exactly projects 01–10.");
+  check(sortedNumbers(directory).slice(0, 12).join(",") === "1,2,3,4,5,6,7,8,9,10,11,12", "The current public Work Directory must include projects 01–12; later public projects may be added.");
+  check(homepage.every(isPublicProject), "Homepage-selected projects must all be public.");
+  check(!homepage.some((project) => ["local-voice-assistant", "password-generator"].includes(project.slug)), "Projects 11 and 12 must stay outside Homepage curation.");
+  const localVoiceAssistant = projectsData.find((project) => project.slug === "local-voice-assistant");
+  const passwordGenerator = projectsData.find((project) => project.slug === "password-generator");
+  check(localVoiceAssistant?.number === 11 && localVoiceAssistant.status === "archived" && isPublicProject(localVoiceAssistant), "Local Voice Assistant must remain public project 11 with archived status.");
+  check(passwordGenerator?.number === 12 && isPublicProject(passwordGenerator), "Password Generator must remain public project 12.");
+  check(localVoiceAssistant?.homepageSelected === false && passwordGenerator?.homepageSelected === false, "Projects 11 and 12 must be excluded from Homepage by explicit curation state.");
+  check(projectsData.filter((project) => project.hidden === true).every((project) => !isIndexableProject(project)), "Hidden projects must remain non-public and non-indexable.");
+  check(directory.filter((project) => hasCompleteDetail(project) && project.seo?.indexable !== false).every(isIndexableProject), "Public complete Project Details must be indexable unless explicitly excluded.");
 }
 
 async function checkProject(project) {
@@ -317,6 +412,7 @@ async function checkLegacyPages() {
 }
 
 async function main() {
+  checkProjectCollections();
   check(!projectsData.some((project) => project.slug === "portfolio-v1" || project.title === "Portfolio V1"), "Canonical data must not contain Portfolio V1.");
   await checkHomepage();
   await checkWorkDirectory();

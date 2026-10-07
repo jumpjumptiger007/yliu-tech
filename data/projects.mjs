@@ -10,6 +10,7 @@ export const projectsData = [
     status: "live",
     featured: true,
     selectedSystem: false,
+    homepageSelected: true,
     summary: "A retro-futurist web television for random signal hunting and internet wandering.",
     featureFlow: ["CURATED SOURCES", "RANDOM CHANNEL", "FILTER / SAVE / NEXT"],
     tags: ["Web experiment", "Signal archive", "Internet culture"],
@@ -114,6 +115,7 @@ export const projectsData = [
     status: "active",
     featured: false,
     selectedSystem: true,
+    homepageSelected: true,
     summary: "A local Rust CLI and macOS desktop app for safely switching Codex providers and models.",
     liveUrl: null,
     githubUrl: "https://github.com/jumpjumptiger007/codex-provider-switcher",
@@ -189,6 +191,7 @@ export const projectsData = [
     status: "active",
     featured: false,
     selectedSystem: true,
+    homepageSelected: true,
     summary: "A local-first Germany-focused job-search system with a macOS desktop app, Codex-assisted analysis, and SQLite tracking.",
     homepagePresentation: {
       systemFlow: {
@@ -295,10 +298,11 @@ export const projectsData = [
     status: "archived",
     featured: false,
     selectedSystem: false,
+    homepageSelected: false,
     summary: "A completed local voice experiment built around a single turn-based speech loop.",
     liveUrl: null,
     githubUrl: null,
-    hidden: true,
+    hidden: false,
     detail: {
       status: "complete",
       actions: { liveDemo: false },
@@ -352,6 +356,7 @@ export const projectsData = [
     status: "prototype",
     featured: false,
     selectedSystem: true,
+    homepageSelected: true,
     summary: "A Samantha-inspired voice assistant for the FoloToy AI Passport, with an OS1-style interface and real-time voice interaction.",
     homepagePresentation: {
       systemFlow: {
@@ -428,6 +433,7 @@ export const projectsData = [
     status: "prototype",
     featured: false,
     selectedSystem: false,
+    homepageSelected: true,
     summary: "An offline, read-only field instrument for observing and interpreting nearby Wi-Fi and Bluetooth LE broadcasts.",
     liveUrl: null,
     githubUrl: "https://github.com/jumpjumptiger007/signal-atlas",
@@ -521,6 +527,7 @@ export const projectsData = [
     status: "live",
     featured: false,
     selectedSystem: false,
+    homepageSelected: true,
     summary: "A personal technical magazine for software, tools, systems, and experiments.",
     liveUrl: "https://yliu.tech/",
     githubUrl: "https://github.com/jumpjumptiger007/yliu-tech",
@@ -589,6 +596,7 @@ export const projectsData = [
     status: "live",
     featured: false,
     selectedSystem: false,
+    homepageSelected: true,
     summary: "Multilingual pollen forecasts and notifications for Germany.",
     liveUrl: null,
     githubUrl: "https://github.com/jumpjumptiger007/pollen-alert-germany",
@@ -665,6 +673,7 @@ export const projectsData = [
     status: "live",
     featured: false,
     selectedSystem: false,
+    homepageSelected: true,
     summary: "A browser-to-automation workflow for preparing personalized email tasks.",
     liveUrl: null,
     githubUrl: "https://github.com/jumpjumptiger007/bulk-email-sender",
@@ -735,6 +744,7 @@ export const projectsData = [
     status: "live",
     featured: false,
     selectedSystem: false,
+    homepageSelected: true,
     summary: "An interactive view of QPSK modulation and signal noise.",
     liveUrl: "projects/qpsk-modulation/",
     githubUrl: "https://github.com/jumpjumptiger007/DigitalComm-QPSK-UDP",
@@ -815,10 +825,11 @@ export const projectsData = [
     status: "live",
     featured: false,
     selectedSystem: false,
+    homepageSelected: false,
     summary: "A configurable password generator with strength guidance.",
     liveUrl: "projects/password-generator/",
     githubUrl: "https://github.com/jumpjumptiger007/password-generator",
-    hidden: true,
+    hidden: false,
     detail: {
       status: "complete",
       actions: { liveDemo: false },
@@ -899,6 +910,7 @@ export const projectsData = [
     status: "active",
     featured: false,
     selectedSystem: false,
+    homepageSelected: true,
     summary: "An autonomous orchestration layer for Codex that advances a sprint one reviewed task at a time, with explicit scope and stop boundaries.",
     liveUrl: null,
     githubUrl: "https://github.com/jumpjumptiger007/codex-autopilot",
@@ -971,8 +983,14 @@ export const projectsData = [
 
 export const hasCompleteDetail = (project) => project.detail?.status === "complete";
 
+export const isPublicProject = (project) => project.hidden !== true;
+
+// Homepage curation is explicit and independent of publication visibility and project numbering.
+export const isHomepageSelectedProject = (project) => isPublicProject(project)
+  && project.homepageSelected === true;
+
 export const isIndexableProject = (project) => hasCompleteDetail(project)
-  && project.hidden !== true
+  && isPublicProject(project)
   && project.seo?.indexable !== false;
 
 export const homepageProjectUrl = (project) => hasCompleteDetail(project)

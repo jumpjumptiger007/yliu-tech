@@ -1,4 +1,4 @@
-import { homepageProjectUrl, projectsData } from "../data/projects.mjs";
+import { homepageProjectUrl, isHomepageSelectedProject, projectsData } from "../data/projects.mjs";
 
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -79,7 +79,7 @@ function renderIndex(projects) {
   const target = document.querySelector("#project-rows");
   if (!target) return;
   const note = document.querySelector(".index-note");
-  if (note) note.textContent = `COMPLETE INDEX / ${String(projects.length).padStart(2, "0")} ENTRIES`;
+  if (note) note.textContent = `CURATED INDEX / ${String(projects.length).padStart(2, "0")} ENTRIES`;
   target.innerHTML = projects.map((project) => {
     const href = homepageProjectUrl(project);
     return `<a class="project-row status-${escapeHtml(project.status)}" href="${escapeHtml(href)}"${externalAttributes(href)} aria-label="Open ${escapeHtml(project.title)}">
@@ -89,8 +89,8 @@ function renderIndex(projects) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const publicProjects = projectsData.filter((project) => !project.hidden).sort((a, b) => Number(a.number) - Number(b.number));
-  renderFeatured(publicProjects.find((project) => project.featured));
-  renderSystems(publicProjects.filter((project) => project.selectedSystem));
-  renderIndex(publicProjects);
+  const selectedProjects = projectsData.filter(isHomepageSelectedProject).sort((a, b) => Number(a.number) - Number(b.number));
+  renderFeatured(selectedProjects.find((project) => project.featured));
+  renderSystems(selectedProjects.filter((project) => project.selectedSystem));
+  renderIndex(selectedProjects);
 });

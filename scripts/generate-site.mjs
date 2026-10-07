@@ -206,7 +206,7 @@ export function validateProjectDefinitions(projects) {
     validateProjectSeo(project.seo, `${label}.seo`);
     validateStorySource(project.storySource, `${label}.storySource`);
 
-    for (const key of ["featured", "selectedSystem", "hidden"]) {
+    for (const key of ["featured", "selectedSystem", "homepageSelected", "hidden"]) {
       if (typeof project[key] !== "boolean") throw new Error(`${label}.${key} must be a boolean.`);
     }
     if (!Number.isInteger(project.year)) throw new Error(`${label}.year must be an integer.`);

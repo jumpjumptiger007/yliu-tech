@@ -10,7 +10,7 @@ function renderChrome(element) {
   const template = document.createElement("template");
   template.innerHTML = `<a class="brand-anchor" href="${page.links[0][1]}" aria-label="Yiqiang Adrian Liu — home"><img src="${page.root}assets/brand/yal-mark.svg" alt="" width="233" height="116"></a>
     <header class="site-header" aria-label="Primary navigation"><div class="nav-wrap"><nav class="nav" aria-label="Primary navigation">${nav}</nav>
-      <svg class="progress-outline" viewBox="0 0 455 63" preserveAspectRatio="none" aria-hidden="true"><path class="active" d="M 1 38 Q 1 58 20 58 L 435 58 Q 454 58 454 38"></path></svg>
+      <svg class="progress-outline" viewBox="0 0 455 63" preserveAspectRatio="none" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><path class="active" d="M 1 38 Q 1 58 20 58 L 435 58 Q 454 58 454 38"></path></svg>
     </div></header>`;
   element.replaceWith(template.content);
 }
@@ -33,6 +33,7 @@ document.querySelectorAll("site-contact").forEach(renderContact);
 
 const progressPath = document.querySelector(".progress-outline .active");
 if (progressPath) {
+  const progressBar = progressPath.ownerSVGElement;
   let frame = 0;
   const pathLength = progressPath.getTotalLength();
   progressPath.style.strokeDasharray = `${pathLength} ${pathLength}`;
@@ -40,6 +41,7 @@ if (progressPath) {
     frame = 0;
     const scrollable = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     const progress = scrollable > 0 ? Math.max(0, Math.min(1, window.scrollY / scrollable)) : 0;
+    progressBar.setAttribute("aria-valuenow", String(Math.round(progress * 100)));
     progressPath.style.strokeDashoffset = String(pathLength * (1 - progress));
     progressPath.style.opacity = progress <= 0.0005 ? "0" : "1";
   };

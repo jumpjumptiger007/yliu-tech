@@ -94,7 +94,7 @@
   max-width: 360px;
   margin: 20px 0 0;
   color: var(--text-muted);
-  font: 500 9px/1.65 var(--mono);
+  font: 500 11px/1.65 var(--mono);
   letter-spacing: .09em;
   text-transform: uppercase;
 }

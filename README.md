@@ -24,7 +24,7 @@ This repository (`jumpjumptiger007/yliu-tech`) contains the current Portfolio V5
 
 ## Project Details
 
-The repository has 10 canonical projects and 10 generated Project Details. `/work/` is the comprehensive directory for all public projects, including prototypes and archived work; the homepage remains the editorial entry point. InterDemTV has a separate public Live Demo. Bulk Email Sender, QPSK Visualization, and Password Generator include embedded V5 interactions.
+The repository currently has 12 canonical projects and 12 generated Project Details. Homepage Selected Work is a curated ten-project editorial sequence, not an exhaustive list or quality ranking. `/work/` is the complete public directory, including public prototypes and archived projects; future public projects may increase its count without automatically joining the Homepage selection. InterDemTV has a separate public Live Demo. Bulk Email Sender, QPSK Visualization, and Password Generator include embedded V5 interactions.
 
 Generate all complete Project Details:
 

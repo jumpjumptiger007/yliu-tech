@@ -357,7 +357,7 @@ Use for:
 - Hero name;
 - Cover Story title;
 - Selected Systems project names;
-- Work Index heading;
+- Selected Work heading;
 - NOW heading;
 - Contact statement;
 - Project Detail display titles.
@@ -513,9 +513,9 @@ Homepage sections should not all use identical vertical padding.
 
 Approved production spacing includes approximately:
 
-- Desktop above 1000px: Cover `25px / 48px`, Systems `46px / 58px`, Work Index and NOW `46px / 52px` top/bottom padding; Homepage Contact `60px` top.
+- Desktop above 1000px: Cover `25px / 48px`, Systems `46px / 58px`, Selected Work and NOW `46px / 52px` top/bottom padding; Homepage Contact `60px` top.
 - Tablet and mobile retain their accepted responsive spacing.
-- Hero remains viewport-height. Work Index is content-driven and has no forced `100vh` minimum.
+- Hero remains viewport-height. Selected Work is content-driven and has no forced `100vh` minimum.
 
 The important rule is not the exact number. The rule is:
 
@@ -529,7 +529,7 @@ Do not restore the earlier large dead zone between the full-screen Hero and Cove
 
 The ticker / lower Hero boundary should visually hand off into Cover Story.
 
-Cover opens as a compact editorial chapter rather than a second viewport-height slide. Systems, Work Index, and NOW use content-led desktop spacing; the Work Index has no forced `100vh` minimum. Keep these chapters continuous without compressing their content.
+Cover opens as a compact editorial chapter rather than a second viewport-height slide. Systems, Selected Work, and NOW use content-led desktop spacing; the Selected Work has no forced `100vh` minimum. Keep these chapters continuous without compressing their content.
 
 ---
 
@@ -539,7 +539,7 @@ The site uses **rules, not boxes**.
 
 ## Section-level separation
 
-Major Homepage chapter transitions use one restrained 1px deep-green rule, `--chapter-rule: rgba(32,49,38,.88)`. Systems, Work Index, NOW, and Contact own the incoming boundary. The ticker/lower Hero treatment owns Hero → Cover; Cover receives no additional top border. Avoid doubled rules and obsolete one-off bottom shadows.
+Major Homepage chapter transitions use one restrained 1px deep-green rule, `--chapter-rule: rgba(32,49,38,.88)`. Systems, Selected Work, NOW, and Contact own the incoming boundary. The ticker/lower Hero treatment owns Hero → Cover; Cover receives no additional top border. Avoid doubled rules and obsolete one-off bottom shadows.
 
 Section-label rules remain a separate editorial device. Background and ambient shifts, typography, and whitespace still create chapter rhythm. Never substitute strong white or bright-green full-width borders for the subtle chapter rule.
 
@@ -552,7 +552,7 @@ Example:
 ```text
 01  COVER STORY ─────────────────────────
 02  SELECTED SYSTEMS ────────────────────
-03  PROJECT INDEX ───────────────────────
+03  CURATED INDEX ───────────────────────
 ```
 
 Rules:
@@ -768,6 +768,8 @@ Requirements:
 - no residual segment may remain at 0%;
 - progress follows total document scroll, not section-local scroll.
 
+The existing outline also exposes passive `progressbar` semantics named `Reading progress`, with a 0–100 value from the same scroll calculation. It does not announce each change through a live region.
+
 Do not recreate this behavior separately for Work or Project Detail.
 
 ## Page state
@@ -901,11 +903,15 @@ Do not add floaty shadow lift.
 
 ---
 
-# 16. Work Index — Homepage-specific
+# 16. Selected Work — Homepage-specific
 
-The Homepage Work Index is a signature editorial ledger.
+Homepage Selected Work is a curated editorial ledger of exactly ten projects, currently #01–#10. It is not exhaustive and it is not a quality ranking; its order is an editorial sequence. The explicit selection flag is separate from project numbering, public visibility, and indexability; Homepage rows use selected public projects. The complete current public body of work lives in `/work/`.
 
-It is not a ranking and not a card grid.
+It is not a card grid.
+
+## Progressive enhancement and project access
+
+The ten selected Project Detail links must exist in static Homepage HTML so core project navigation works without JavaScript. JavaScript may enhance or replace that markup, but must not append a duplicate list. Keep static links, order, and project identity aligned with canonical project data through validation.
 
 ## Hierarchy
 
@@ -926,7 +932,7 @@ Use:
 
 The table is one of the clearest expressions of the “personal technology magazine” concept.
 
-The Work Index remains content-driven at desktop widths. Do not add a forced `100vh` minimum that turns it into a presentation slide.
+The Selected Work remains content-driven at desktop widths. Do not add a forced `100vh` minimum that turns it into a presentation slide.
 
 ---
 
@@ -1072,11 +1078,17 @@ Mobile should not merely stack every desktop card without reconsidering spacing.
 
 # 21. Work Directory — approved archetype
 
-The `/work/` page is an **editorial card index of project articles**.
+The `/work/` page is the complete public directory of project articles, presented as an **editorial card index**.
 
 It is no longer defined as a ledger-only page.
 
 The approved direction is the frozen **Technical Publication Index** card system.
+
+## Public collection and project access
+
+The directory contains every canonical project that is public. Public archived projects may remain in the directory; `hidden: true` means genuinely non-public and such projects are excluded. The current directory contains 12 projects and may grow beyond 12. Homepage curation does not determine whether a project is public or indexable, and adding a public project does not automatically add it to Homepage Selected Work.
+
+All project links must be present in static Work HTML so core navigation remains usable without JavaScript. JavaScript may enhance or replace this markup, but must not append a duplicate list. Validate the static link count, project order, and destinations against the canonical public collection.
 
 ## Purpose
 
@@ -1184,6 +1196,8 @@ Use:
 The CTA must remain visible without competing with the project title.
 
 ## Interaction
+
+Each card exposes exactly one Project Detail destination for pointer and keyboard use. The whole card remains usable as one link; the visible `READ ARTICLE ↗` CTA is part of that same link and must not create a second focus stop.
 
 Cards may:
 
@@ -1454,7 +1468,7 @@ Do not capture a weak screenshot solely to fill space.
 - use section-label rules as editorial chapter markers;
 - use ambient fields softly;
 - use rounded panels only for system objects;
-- keep Work Index and ledgers flat;
+- keep Selected Work and ledgers flat;
 - allow selected technical surfaces to be bordered and rounded;
 - preserve real project information;
 - make page hierarchy obvious before adding effects;
