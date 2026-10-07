@@ -164,8 +164,14 @@ function validateModule(module, label) {
     const relative = path.relative(root, imagePath);
     if (relative.startsWith("..") || path.isAbsolute(relative)) throw new Error(`${label}.src must stay inside the site root.`);
   } else if (module.type === "interactive") {
+    const allowed = ["type", "label", "title", "src", "frameTitle", "caption", "runtimeProfile"];
+    const unsupported = Object.keys(module).filter((key) => !allowed.includes(key));
+    if (unsupported.length) throw new Error(`${label} contains unsupported properties: ${unsupported.join(", ")}.`);
     requireText(module.src, `${label}.src`);
     requireText(module.frameTitle, `${label}.frameTitle`);
+    if (module.runtimeProfile !== undefined && module.runtimeProfile !== "trusted-media") {
+      throw new Error(`${label}.runtimeProfile must be "trusted-media" when provided.`);
+    }
     if (/^(?:[a-z][a-z0-9+.-]*:)?\/\//i.test(module.src) || module.src.startsWith("/") || module.src.split("/").includes("..") || module.src.includes("\\") || /[?#]/.test(module.src)) {
       throw new Error(`${label}.src must be a site-root-relative local path without traversal.`);
     }

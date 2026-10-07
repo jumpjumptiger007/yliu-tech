@@ -979,6 +979,83 @@ export const projectsData = [
       ],
     },
   },
+  {
+    slug: "sonic-link",
+    number: 13,
+    title: "Sonic Link",
+    type: "Acoustic Link",
+    year: 2026,
+    status: "prototype",
+    featured: false,
+    selectedSystem: false,
+    homepageSelected: false,
+    summary: "A local browser-to-AI Passport link for transferring small structured payloads over audio without pairing or cloud transport.",
+    liveUrl: null,
+    githubUrl: null,
+    hidden: true,
+    seo: { indexable: false },
+    detail: {
+      status: "complete",
+      actions: { liveDemo: false },
+      titleLines: ["Sonic", "Link"],
+      modules: [
+        {
+          type: "overview",
+          label: "Project overview",
+          title: "Move small data through sound",
+          paragraphs: [
+            "Sonic Link transfers small structured payloads between a browser and the AI Passport over audio.",
+            "Payload preparation and decoding run locally in the browser. The transfer path needs no pairing, account, or cloud transport.",
+            "Physical acoustic acceptance remains incomplete and has not been verified.",
+          ],
+        },
+        {
+          type: "signal",
+          label: "Transfer path",
+          title: "From payload bytes to sound and back",
+          stages: [
+            "Payload",
+            "Validation",
+            "40-byte framing",
+            "Acoustic encoding",
+            "Speaker / microphone",
+            "Local decode",
+            "Reassembly",
+            "Validated payload",
+          ],
+        },
+        {
+          type: "interactive",
+          label: "Interactive demo",
+          title: "Move data through sound",
+          src: "demos/sonic-link/index.html",
+          frameTitle: "Interactive Sonic Link acoustic transfer instrument",
+          runtimeProfile: "trusted-media",
+          caption: "Payload preparation, audio transmission, microphone capture and decoding operate locally in the browser.",
+        },
+        {
+          type: "system",
+          label: "Browser runtime",
+          title: "Keep capture and decoding off the UI thread",
+          rows: [
+            ["TX", "Payload preparation → Sonic Core WASM → ggwave WASM → Web Audio output"],
+            ["RX", "Microphone → AudioWorklet → Decode Worker → ggwave → Sonic Core reassembly"],
+          ],
+        },
+        {
+          type: "technical",
+          label: "Implementation",
+          title: "Bounded payloads, real playback progress, local decoding",
+          paragraphs: [
+            "TEXT, URL, and TOKEN payloads are limited to 93 bytes and divided into 40-byte frames. TEXT normalization and URL validation happen before transmission; TOKEN carries binary bytes.",
+            "Transmit progress advances after actual audio playback completes. A completed transmission confirms audio output only; it does not confirm reception.",
+            "The browser requests microphone access only after an explicit user action. AudioWorklet capture feeds a decode Worker for ggwave decoding and Sonic Core reassembly; normal receive audio is not retained.",
+            "Physical acoustic acceptance with the AI Passport remains incomplete and unverified.",
+          ],
+        },
+      ],
+    },
+  },
 ].sort((left, right) => left.number - right.number);
 
 export const hasCompleteDetail = (project) => project.detail?.status === "complete";

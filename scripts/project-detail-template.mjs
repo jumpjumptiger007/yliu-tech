@@ -62,7 +62,10 @@ function renderReportTable(module, index) {
 
 function renderInteractive(module, index) {
   const caption = module.caption ? `<figcaption class="interactive-caption">${escapeHtml(module.caption)}</figcaption>` : "";
-  return `<section class="article-section detail-section media-section" data-reveal aria-labelledby="${module.id}"><div class="section-head"><div><p class="chapter-label"><b>${String(index + 1).padStart(2, "0")}</b> ${escapeHtml(module.label)}</p><h2 id="${module.id}">${escapeHtml(module.title)}</h2></div></div><figure class="interactive-frame"><iframe src="${escapeHtml(siteAssetHref(module.src))}" title="${escapeHtml(module.frameTitle)}" loading="lazy" sandbox="allow-scripts"></iframe>${caption}</figure></section>`;
+  const trustedMedia = module.runtimeProfile === "trusted-media";
+  const sandbox = trustedMedia ? "allow-scripts allow-same-origin" : "allow-scripts";
+  const allow = trustedMedia ? ' allow="microphone; clipboard-write"' : "";
+  return `<section class="article-section detail-section media-section" data-reveal aria-labelledby="${module.id}"><div class="section-head"><div><p class="chapter-label"><b>${String(index + 1).padStart(2, "0")}</b> ${escapeHtml(module.label)}</p><h2 id="${module.id}">${escapeHtml(module.title)}</h2></div></div><figure class="interactive-frame"><iframe src="${escapeHtml(siteAssetHref(module.src))}" title="${escapeHtml(module.frameTitle)}" loading="lazy" sandbox="${sandbox}"${allow}></iframe>${caption}</figure></section>`;
 }
 
 function renderSystem(module, index) {

@@ -83,7 +83,9 @@ Both new module schemas reject all unsupported properties, including `color`, `i
 
 ## Interactive modules
 
-Use an `interactive` module for a local, isolated interactive artifact. It requires `type`, `label`, `title`, `src`, and `frameTitle`; `caption` is optional. `src` must be a site-root-relative local file that exists inside the repository. The renderer embeds it in a lazy, script-only sandboxed iframe. Use this module when interaction materially supports the Project Detail without adding project-specific renderer logic.
+Use an `interactive` module for a local interactive artifact. It requires `type`, `label`, `title`, `src`, and `frameTitle`; `caption` and `runtimeProfile` are optional. `src` must be a site-root-relative local file that exists inside the repository. The default profile embeds the artifact in a lazy, script-only sandboxed iframe. Use this module when interaction materially supports the Project Detail without adding project-specific renderer logic.
+
+`runtimeProfile` is a closed enum. Omit it for ordinary embeds. The reserved `trusted-media` profile is only for reviewed, same-origin local embeds that need microphone and clipboard-write capabilities. The renderer applies the exact policy `sandbox="allow-scripts allow-same-origin"` and `allow="microphone; clipboard-write"`; omitted profiles keep `sandbox="allow-scripts"` and receive no `allow` attribute. Do not use this profile as arbitrary iframe configuration or add permission attributes to project data. Clipboard writes must still come from a direct user action inside the embedded application.
 
 ## Image modules
 
