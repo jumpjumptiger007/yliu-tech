@@ -302,18 +302,18 @@ function checkProjectCollections() {
   const homepage = projectsData.filter(isHomepageSelectedProject);
   const directory = projectsData.filter(isPublicProject);
   check(sortedNumbers(homepage).join(",") === "1,2,3,4,5,6,7,8,9,10", "Canonical Homepage curation must contain exactly projects 01–10.");
-  check(sortedNumbers(directory).join(",") === "1,2,3,4,5,6,7,8,9,10,11,12", "Canonical public Work Directory must contain exactly projects 01–12.");
+  check(sortedNumbers(directory).join(",") === "1,2,3,4,5,6,7,8,9,10,11,12,13", "Canonical public Work Directory must contain exactly projects 01–13.");
   const selectedSlugs = ["interdemtv", "codex-provider-switcher", "job-search-agent", "samantha-ai-assistant", "signal-atlas", "codex-autopilot", "personal-tech-magazine", "pollen-alert-germany", "qpsk-visualization", "sonic-link"];
   const exactSequence = (collection, slugs) => [...collection].sort((left, right) => left.number - right.number)
     .map((project) => `${project.number}:${project.slug}`).join(",") === slugs.map((slug, index) => `${index + 1}:${slug}`).join(",");
   check(exactSequence(homepage, selectedSlugs), "Homepage must contain the exact approved sequence with Sonic Link at 10.");
-  check(exactSequence(directory, [...selectedSlugs, "local-voice-assistant", "password-generator"]), "Work must contain the exact approved sequence with Sonic Link at 10 and no Bulk Email Sender.");
+  check(exactSequence(directory, [...selectedSlugs, "local-voice-assistant", "password-generator", "bulk-email-sender"]), "Work must contain the exact approved sequence with Sonic Link at 10 and Bulk Email Sender at 13.");
   const sonicLink = projectsData.find((project) => project.slug === "sonic-link");
   const bulkEmailSender = projectsData.find((project) => project.slug === "bulk-email-sender");
   check(sonicLink?.number === 10 && isHomepageSelectedProject(sonicLink) && isIndexableProject(sonicLink), "Sonic Link must be selected, public and indexable project 10.");
-  check(bulkEmailSender?.number === 13 && bulkEmailSender.hidden === true && bulkEmailSender.homepageSelected === false && bulkEmailSender.seo?.indexable === false && hasCompleteDetail(bulkEmailSender), "Bulk Email Sender must retain its complete detail as hidden, non-indexable project 13.");
+  check(bulkEmailSender?.number === 13 && isPublicProject(bulkEmailSender) && bulkEmailSender.homepageSelected === false && isIndexableProject(bulkEmailSender) && hasCompleteDetail(bulkEmailSender), "Bulk Email Sender must be public, indexable, complete project 13 and excluded from Homepage curation.");
   check(projectsData.filter(hasCompleteDetail).length === 13, "Exactly 13 complete Project Details must remain.");
-  check(projectsData.filter(isIndexableProject).length === 12, "Exactly 12 Project Details must be indexable.");
+  check(projectsData.filter(isIndexableProject).length === 13, "Exactly 13 Project Details must be indexable.");
   check(homepage.every(isPublicProject), "Homepage-selected projects must all be public.");
   check(!homepage.some((project) => ["local-voice-assistant", "password-generator"].includes(project.slug)), "Projects 11 and 12 must stay outside Homepage curation.");
   const localVoiceAssistant = projectsData.find((project) => project.slug === "local-voice-assistant");
@@ -321,7 +321,7 @@ function checkProjectCollections() {
   check(localVoiceAssistant?.number === 11 && localVoiceAssistant.status === "archived" && isPublicProject(localVoiceAssistant), "Local Voice Assistant must remain public project 11 with archived status.");
   check(passwordGenerator?.number === 12 && isPublicProject(passwordGenerator), "Password Generator must remain public project 12.");
   check(localVoiceAssistant?.homepageSelected === false && passwordGenerator?.homepageSelected === false, "Projects 11 and 12 must be excluded from Homepage by explicit curation state.");
-  check(projectsData.filter((project) => project.hidden === true).every((project) => !isIndexableProject(project)), "Hidden projects must remain non-public and non-indexable.");
+  check(!projectsData.some((project) => project.hidden === true), "No canonical projects may be hidden.");
   check(directory.filter((project) => hasCompleteDetail(project) && project.seo?.indexable !== false).every(isIndexableProject), "Public complete Project Details must be indexable unless explicitly excluded.");
 }
 

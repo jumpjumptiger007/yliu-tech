@@ -677,8 +677,8 @@ export const projectsData = [
     summary: "A browser-to-automation workflow for preparing personalized email tasks.",
     liveUrl: null,
     githubUrl: "https://github.com/jumpjumptiger007/bulk-email-sender",
-    hidden: true,
-    seo: { indexable: false },
+    hidden: false,
+    seo: { indexable: true },
     detail: {
       status: "complete",
       actions: { liveDemo: false },
